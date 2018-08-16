@@ -10,11 +10,12 @@ const io = socket();
 
 var users = 0;
 
- server.listen(port,()=>{
-	console.log("this is portname",port);
-}) 
+
 io.listen(server);
 
+server.listen(port,function(){
+	console.log("Starting on this port",port)
+});
 io.on('connection', function(socket){
 	users++;
   console.log(`a user connected\nnumber of users : ${users}`);
@@ -27,6 +28,8 @@ io.on('connection', function(socket){
 	io.emit("chat message",msg);
   })
 });
+
+
 
 app.use(body.json())
 app.use(body.urlencoded({

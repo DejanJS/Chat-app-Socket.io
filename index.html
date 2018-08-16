@@ -11,23 +11,57 @@
       #messages { list-style-type: none; margin: 0; padding: 0; }
       #messages li { padding: 5px 10px; }
       #messages li:nth-child(odd) { background: #eee; }
+
+		.boxn{
+			border: 1px solid black;
+			border-radius:10px;
+			height:200px;
+			width:300px;
+			position:relative;
+			padding:10px;
+			font-size:15px;
+			
+		}
     </style>
   </head>
   <body>
+  	<div class="boxn">
+		<Strong>Nickname : </Strong><input type="text" class="Nname"/>
+		<button class="ok">OK</button>
+	</div>
     <ul id="messages"></ul>
     <div class="box">
-      <input id="m" autocomplete="off" /><button>Send</button>
+      <input id="m" autocomplete="off" disabled/><button class="send">Send</button>
     </div>
 	<script src="/socket.io/socket.io.js"></script>
 	<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
 	<script>
+	
+
 	$(function(){
 	var socket = io();
-	$('button').click(function(){
+	// $('.box').css("display","block");
+	// if($('.Nname').val() !== undefined){}
+	$('html > * :not(.boxn):not(.Nname):not(.ok):not(strong)').css("opacity",0.2);
+	$('.ok').click(function(){
+		$('.boxn').remove();
+		$('*').css("opacity",1);
+		$('#m').removeAttr("disabled");
+	})
+
+	$('.send').click(function(){
+		if($('.boxn').length <= 0){
 		socket.emit('chat message',$('#m').val());
 			$('#m').val('');
+		}
+		return false;
 			//return false;
 	})
+
+	// $('.ok').click(function(){
+	// 	socket.emit("username",$('.Nname').val());
+	// 	$('.boxn').css('display','none');
+	// })
 	
 		$('#m').keyup(function(e){
 			if(e.which === 13){

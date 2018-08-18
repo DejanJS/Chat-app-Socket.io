@@ -20,7 +20,7 @@
 			position:relative;
 			padding:10px;
 			font-size:15px;
-			
+		
 		}
     </style>
   </head>
@@ -42,8 +42,11 @@
 	var socket = io();
 	// $('.box').css("display","block");
 	// if($('.Nname').val() !== undefined){}
+	var username;
 	$('html > * :not(.boxn):not(.Nname):not(.ok):not(strong)').css("opacity",0.2);
 	$('.ok').click(function(){
+		// socket.emit('username',$(".Nname").val());
+		username = $('.Nname').val()
 		$('.boxn').remove();
 		$('*').css("opacity",1);
 		$('#m').removeAttr("disabled");
@@ -51,7 +54,7 @@
 
 	$('.send').click(function(){
 		if($('.boxn').length <= 0){
-		socket.emit('chat message',$('#m').val());
+		socket.emit('chat message',{ msg : $('#m').val(), user : username});
 			$('#m').val('');
 		}
 		return false;
@@ -65,13 +68,15 @@
 	
 		$('#m').keyup(function(e){
 			if(e.which === 13){
-			socket.emit("chat message",$(this).val());
+			socket.emit("chat message",{ msg : $(this).val(), user : username});
 				$(this).val('')
 			}
 		})
-		socket.on("chat message",function(msg){
-			$('#messages').append($('<li>').text(msg));
-		})
+			socket.on("chat message",function(msg){
+				$('#messages').append($('<li>').text(msg.user + " : " + msg.msg));
+		 	})
+		
+		
 	})
 	
 	</script>

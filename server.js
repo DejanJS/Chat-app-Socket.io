@@ -24,9 +24,10 @@ io.on('connection', function(socket){
 	  console.log(`user disconnected\nnumber of users : ${users}`)
   })
   socket.on('chat message', function(msg){
-    console.log('message: ' + msg);
+    console.log('message: ' + msg.msg);
 	io.emit("chat message",msg);
   })
+  
 });
 
 

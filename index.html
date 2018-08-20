@@ -81,6 +81,14 @@
 			socket.on("chat message",function(msg){
 				$('#messages').append($('<li>').text(msg.user + " : " + msg.msg));
 		 	})
+
+		 	$('#m').keypress(function(){
+		 		socket.emit("typing",username)
+		 	})
+
+		 	socket.on("typing",function(data){
+		 		$('.type').text(data + " is typing...")
+		 	})
 		
 		
 	})

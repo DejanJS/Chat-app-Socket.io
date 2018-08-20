@@ -30,6 +30,12 @@ io.on('connection', function(socket){
   socket.on("typing",function(data){
   	socket.broadcast.emit('typing',data)
   })
+  socket.on("notyping",function(empty){
+  	socket.broadcast.emit("notyping",empty)
+  })
+  // socket.on("nofocus",function(empty){
+  // 	socket.broadcast.emit("nofocus",empty)
+  // })
   
 });
 

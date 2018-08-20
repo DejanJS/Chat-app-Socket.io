@@ -49,6 +49,7 @@
 	// $('.box').css("display","block");
 	// if($('.Nname').val() !== undefined){}
 	var username;
+	
 	$('html > * :not(.boxn):not(.Nname):not(.ok):not(strong)').css("opacity",0.2);
 	$('.ok').click(function(){
 		// socket.emit('username',$(".Nname").val());
@@ -79,16 +80,34 @@
 			}
 		})
 			socket.on("chat message",function(msg){
+				$('.type').text('');
 				$('#messages').append($('<li>').text(msg.user + " : " + msg.msg));
 		 	})
 
-		 	$('#m').keypress(function(){
-		 		socket.emit("typing",username)
-		 	})
+		 	// $('#m').keypress(function(){
+		 	// 	socket.emit("typing",username)
+		 	// })
 
+		 	$("#m").on("input",function(){
+		 		socket.emit("typing",username);
+		 		if($(this).val() === ''){
+		 			socket.emit("notyping",'')
+		 		}
+		 	})
+		 	 // $("#m").focusout(function(){
+		 	 	// focus ++;
+
+		 		// socket.emit("nofocus",'');
+		 	 // })
 		 	socket.on("typing",function(data){
 		 		$('.type').text(data + " is typing...")
 		 	})
+		 	socket.on("notyping",function(empty){
+		 		$('.type').text(empty);
+		 	})
+		 	// socket.on("nofocus",function(data){
+		 	// 	$('.type').text(data)
+		 	// })
 		
 		
 	})

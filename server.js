@@ -33,10 +33,6 @@ io.on('connection', function(socket){
   socket.on("notyping",function(empty){
   	socket.broadcast.emit("notyping",empty)
   })
-   // socket.on("nofocus",function(empty){
-   // 	socket.broadcast.emit("nofocus",empty)
-   // })
-  
 });
 
 

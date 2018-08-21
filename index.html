@@ -24,9 +24,53 @@
 		}
 		.type { 
 			bottom: 43px;
-		    position: fixed;
-		   	margin-left: 20px;
+		   position: fixed;
+		   margin-left: 50px;
 		 }
+
+.loader {
+	position:fixed;
+	width:50px;
+	height:15px;
+	text-align:center;
+	display:none;
+	bottom:43px;
+
+} 
+
+.circle {
+  height: 5px;
+  width: 10px;
+  background-color: #bbb;
+  border-radius: 50%;
+  display: inline-block;
+	position:relative;
+	animation: expand .75s ease-in-out infinite;
+	transform-origin: center center;
+}
+
+@keyframes expand {
+  0% {
+    transform: scale(1);
+  }
+  25% {
+    transform: scale(1.55);
+  }
+}
+
+.circle:nth-child(1) {
+  background:#D3D3D3;
+}
+
+.circle:nth-child(2) {
+  animation-delay: 180ms;
+   background: #D3D3D3; 
+}
+
+.circle:nth-child(3) {
+  animation-delay: 360ms;
+  background:#D3D3D3;
+}
     </style>
   </head>
   <body>
@@ -35,6 +79,11 @@
 		<button class="ok">OK</button>
 	</div>
     <ul id="messages"></ul>
+<div class="loader">
+	<div class="circle"></div>
+	<div class="circle"></div>
+	<div class="circle"></div>
+</div>
     <div class="type"></div>
     <div class="box">
       <input id="m" autocomplete="off" disabled/><button class="send">Send</button>
@@ -70,6 +119,7 @@
 			}
 		})
 			socket.on("chat message",function(msg){
+				$('.loader').css("display","none");
 				$('.type').text('');
 				$('#messages').append($('<li>').text(msg.user + " : " + msg.msg));
 		 	})
@@ -84,9 +134,11 @@
 		 	})
 
 		 	socket.on("typing",function(data){
-		 		$('.type').text(data + " is typing...")
+		 		$('.loader').css("display","inline-block");
+		 		$('.type').html("<em>" + data + " is typing..." + "</em>")
 		 	})
-		 	socket.on("notyping",function(empty){	 		
+		 	socket.on("notyping",function(empty){
+		 			$('.loader').css("display","none");	 		
 		 			$('.type').text(empty);		 				 		
 		 	})		
 	})

@@ -45,14 +45,10 @@
 	
 
 	$(function(){
-	var socket = io();
-	// $('.box').css("display","block");
-	// if($('.Nname').val() !== undefined){}
-	var username;
-	
+		var socket = io();
+		var username;	
 	$('html > * :not(.boxn):not(.Nname):not(.ok):not(strong)').css("opacity",0.2);
 	$('.ok').click(function(){
-		// socket.emit('username',$(".Nname").val());
 		username = $('.Nname').val()
 		$('.boxn').remove();
 		$('*').css("opacity",1);
@@ -65,14 +61,8 @@
 			$('#m').val('');
 		}
 		return false;
-			//return false;
+		
 	})
-
-	// $('.ok').click(function(){
-	// 	socket.emit("username",$('.Nname').val());
-	// 	$('.boxn').css('display','none');
-	// })
-	
 		$('#m').keyup(function(e){
 			if(e.which === 13){
 			socket.emit("chat message",{ msg : $(this).val(), user : username});
@@ -84,32 +74,21 @@
 				$('#messages').append($('<li>').text(msg.user + " : " + msg.msg));
 		 	})
 
-		 	// $('#m').keypress(function(){
-		 	// 	socket.emit("typing",username)
-		 	// })
-
 		 	$("#m").on("input",function(){
 		 		socket.emit("typing",username);
-		 		if($(this).val() === ''){
-		 			socket.emit("notyping",'')
-		 		}
+		 		if(true){ // small typing hack
+			 		setTimeout(function(){
+			 			socket.emit("notyping",'')	
+			 		},2000)	
+		 		}		 		
 		 	})
-		 	 // $("#m").focusout(function(){
-		 	 	// focus ++;
 
-		 		// socket.emit("nofocus",'');
-		 	 // })
 		 	socket.on("typing",function(data){
 		 		$('.type').text(data + " is typing...")
 		 	})
-		 	socket.on("notyping",function(empty){
-		 		$('.type').text(empty);
-		 	})
-		 	// socket.on("nofocus",function(data){
-		 	// 	$('.type').text(data)
-		 	// })
-		
-		
+		 	socket.on("notyping",function(empty){	 		
+		 			$('.type').text(empty);		 				 		
+		 	})		
 	})
 	
 	</script>

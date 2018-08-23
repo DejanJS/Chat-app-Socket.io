@@ -16,6 +16,9 @@ io.listen(server);
 server.listen(port,function(){
 	console.log("Starting on this port",port)
 });
+
+app.use(express.static('public'));
+
 io.on('connection', function(socket){
 	users++;
   console.log(`a user connected\nnumber of users : ${users}`);
@@ -45,6 +48,6 @@ app.use(body.urlencoded({
 
 
 app.get("/",function(req,res){
-	res.sendFile(__dirname + "/index.html");
+	res.sendFile(__dirname + "/public/index.html");
 })
 

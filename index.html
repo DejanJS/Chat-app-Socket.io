@@ -12,32 +12,29 @@
       #messages li { padding: 5px 10px; }
       #messages li:nth-child(odd) { background: #eee; }
 
-		.boxn{
-			border: 1px solid black;
-			border-radius:10px;
-			height:200px;
-			width:300px;
-			position:relative;
-			padding:10px;
-			font-size:15px;
-		
-		}
-		.type { 
-			bottom: 43px;
-		   position: fixed;
-		   margin-left: 50px;
-		 }
+.boxn{
+border: 1px solid black;
+border-radius:10px;
+height:200px;
+width:300px;
+position:relative;
+padding:10px;
+font-size:15px;
 
+}
+.type {
+bottom: 43px;
+position: fixed;
+margin-left: 50px;
+}
 .loader {
-	position:fixed;
-	width:50px;
-	height:15px;
-	text-align:center;
-	display:none;
-	bottom:43px;
-
-} 
-
+position:fixed;
+width:50px;
+height:15px;
+text-align:center;
+display:none;
+bottom:43px;
+}
 .circle {
   height: 5px;
   width: 10px;
@@ -77,16 +74,16 @@
 
 /*name box is here*/ 
 
-	.centered {
-  width: 650px;
-  height: 410px;
-  position: relative;
-  top: 50%;
-  left: 50%;
-	background: #333;
-	/* border:1px solid blue; */
-	transform:translate(-50%,25%);
-	-webkit-box-shadow: -1px -1px 15px 1px rgba(43,198,237,0.75);
+.centered {
+width: 650px;
+height: 410px;
+position: relative;
+top: 50%;
+left: 50%;
+background: #333;
+/* border:1px solid blue; */
+transform:translate(-50%,25%);
+-webkit-box-shadow: -1px -1px 15px 1px rgba(43,198,237,0.75);
 -moz-box-shadow: -1px -1px 15px 1px rgba(43,198,237,0.75);
 box-shadow: -1px -1px 15px 1px rgba(43,198,237,0.75);
 }
@@ -208,15 +205,10 @@ label {
 	position:relative;
 	top:1px;
 }
-
-    </style>
-  </head>
-  <body>
-  	<!-- <div class="boxn">
-		<Strong>Nickname : </Strong><input type="text" class="Nname"/>
-		<button class="ok">OK</button>
-	</div> -->
-	<div class="centered">
+</style>
+</head>
+<body>
+<div class="centered">
 	<div class="group">
 		<input type="text" id="name" required="required">
 		<label class="lab" for="name" >Name</label>
@@ -224,25 +216,24 @@ label {
 		<a href="#" class="sub">SUBMIT</a>
 	</div>
 </div>
-    <ul id="messages"></ul>
+<ul id="messages"></ul>
 <div class="loader">
 	<div class="circle"></div>
 	<div class="circle"></div>
 	<div class="circle"></div>
 </div>
-    <div class="type"></div>
-    <div class="box">
-      <input id="m" autocomplete="off" disabled/><button class="send">Send</button>
-    </div>
-	<script src="/socket.io/socket.io.js"></script>
-	<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
-	<script>
+<div class="type"></div>
+<div class="box">
+	<input id="m" autocomplete="off" disabled/><button class="send">Send</button>
+</div>
+<script src="/socket.io/socket.io.js"></script>
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+<script>
 	
 
 	$(function(){
 		var socket = io();
 		var username;	
-	// $('html > * :not(.boxn):not(.Nname):not(.ok):not(strong)').css("opacity",0.2);
 	$('html > * :not(.centered):not(#name):not(.sub):not(.bar):not(.lab):not(.group)').css("opacity",0.2)
 	$('.sub').click(function(){
 		username = $('.name').val()

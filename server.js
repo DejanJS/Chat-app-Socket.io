@@ -7,9 +7,17 @@ const port = process.env.PORT || 3000;
 const server = http.createServer(app)
 const socket = require("socket.io");
 const io = socket();
-
+var pgp = require('pg-promise')(/*options*/)
+var db = pgp('postgres://postgres:grimftw@localhost:5432/Chat');
 var users = 0;
 
+db.one('SELECT username FROM History')
+  .then(function (data) {
+    console.log('DATA:', data.username)
+  })
+  .catch(function (error) {
+    console.log('ERROR:', error)
+  })
 
 io.listen(server);
 

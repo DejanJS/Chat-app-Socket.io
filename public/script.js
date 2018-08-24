@@ -3,7 +3,7 @@
 		var username;
 	$('html > * :not(.centered):not(#name):not(.sub):not(.bar):not(.lab):not(.group)').css("opacity",0.2)
 	$('.sub').click(function(){
-		window.location.href.split('#')[0]
+		// window.location.href.split('#')[0]
 		username = $('#name').val();
 		console.log("this is user ",$('#name').val());
 		$('.centered').remove();

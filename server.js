@@ -17,7 +17,7 @@ server.listen(port,function(){
 	console.log("Starting on this port",port)
 });
 
-app.use("/",express.static('public'));
+app.use("/public",express.static('public'));
 
 io.on('connection', function(socket){
 	users++;

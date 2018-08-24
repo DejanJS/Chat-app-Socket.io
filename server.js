@@ -17,7 +17,7 @@ server.listen(port,function(){
 	console.log("Starting on this port",port)
 });
 
-app.use(express.static('public'));
+app.use("/",express.static('public'));
 
 io.on('connection', function(socket){
 	users++;
@@ -47,7 +47,7 @@ app.use(body.urlencoded({
 
 
 
-app.get("/",function(req,res){
-	res.sendFile(__dirname + "/public/index.html");
-})
+ app.get("/",function(req,res){
+ 	res.sendFile(__dirname + "/public/index.html");
+ })
 

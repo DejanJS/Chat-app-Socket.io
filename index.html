@@ -7,10 +7,10 @@
 <body>
 <div class="centered">
 	<div class="group">
-		<input type="text" id="name" required="required">
-		<label class="lab" for="name" >Name</label>
+		<input type="text" id="name" required="required"/>
+		<label class="lab" >Name</label>
 		<div class="bar"></div>
-		<a href="#" class="sub">SUBMIT</a>
+		<button class="sub">SUBMIT</button>
 	</div>
 </div>
 <ul id="messages"></ul>
@@ -25,59 +25,6 @@
 </div>
 <script src="/socket.io/socket.io.js"></script>
 <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
-<script>
-	
-
-	$(function(){
-		var socket = io();
-		var username;	
-	$('html > * :not(.centered):not(#name):not(.sub):not(.bar):not(.lab):not(.group)').css("opacity",0.2)
-	$('.sub').click(function(){
-		username = $('.name').val()
-		$('.centered').remove();
-		$('*').css("opacity",1);
-		$('#m').removeAttr("disabled");
-	})
-
-	$('.send').click(function(){
-		if($('.centered').length <= 0){
-		socket.emit('chat message',{ msg : $('#m').val(), user : username});
-			$('#m').val('');
-		}
-		return false;
-		
-	})
-		$('#m').keyup(function(e){
-			if(e.which === 13){
-			socket.emit("chat message",{ msg : $(this).val(), user : username});
-				$(this).val('')
-			}
-		})
-			socket.on("chat message",function(msg){
-				$('.loader').css("display","none");
-				$('.type').text('');
-				$('#messages').append($('<li>').text(msg.user + " : " + msg.msg));
-		 	})
-
-		 	$("#m").on("input",function(){
-		 		socket.emit("typing",username);
-		 		if(true){ // small typing hack
-			 		setTimeout(function(){
-			 			socket.emit("notyping",'')	
-			 		},2000)	
-		 		}		 		
-		 	})
-
-		 	socket.on("typing",function(data){
-		 		$('.loader').css("display","inline-block");
-		 		$('.type').html("<em>" + data + " is typing..." + "</em>")
-		 	})
-		 	socket.on("notyping",function(empty){
-		 			$('.loader').css("display","none");	 		
-		 			$('.type').text(empty);		 				 		
-		 	})		
-	})
-	
-	</script>
+<script src="public/script.js" type="text/javascript"></script>
   </body>
 </html>

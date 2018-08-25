@@ -7,8 +7,9 @@ const port = process.env.PORT || 3000;
 const server = http.createServer(app)
 const socket = require("socket.io");
 const io = socket();
-var pgp = require('pg-promise')(/*options*/)
+var pgp = require('pg-promise')();
 var db = pgp('postgres://postgres:grimftw@localhost:5432/Chat');
+
 var users = 0;
 
 db.one('SELECT username FROM History')
@@ -18,6 +19,14 @@ db.one('SELECT username FROM History')
   .catch(function (error) {
     console.log('ERROR:', error)
   })
+// db.none('INSERT INTO History(username) VALUES($1)',["Steven"])
+// .then(()=>{
+// 	console.log("added something")
+// })
+// .catch(err =>{
+// 	console.log("there was an err",err)
+// })
+
 
 io.listen(server);
 
@@ -30,6 +39,7 @@ app.use("/public",express.static('public'));
 io.on('connection', function(socket){
 	users++;
   console.log(`a user connected\nnumber of users : ${users}`);
+  console.log("Loopback : ", socket.handshake.address)
   socket.on('disconnect',()=>{
 	  users--;
 	  console.log(`user disconnected\nnumber of users : ${users}`)

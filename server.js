@@ -16,13 +16,24 @@ function crypting(pass,alg="sha256",secret ="this is my secret",salt = "asjdkluh
 
 var users = 0;
 
-db.one('SELECT username FROM History')
-  .then(function (data) {
-    console.log('DATA:', data.username)
-  })
-  .catch(function (error) {
-    console.log('ERROR:', error)
-  })
+// db.one('SELECT username FROM History')
+//   .then(function (data) {
+//     console.log('DATA:', data.username)
+//   })
+//   .catch(function (error) {
+//     console.log('ERROR:', error)
+//   })
+async function getUser(){
+	var data = await db.one('SELECT username FROM History'); // bob
+	console.log(data.username); // bob 
+};
+
+getUser();
+// async function printUser(){
+// console.log("am i getting data : ",await getUser());	
+// }
+// printUser();
+
 // db.none('INSERT INTO History(username) VALUES($1)',["Steven"])
 // .then(()=>{
 // 	console.log("added something")

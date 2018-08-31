@@ -9,6 +9,10 @@ const socket = require("socket.io");
 const io = socket();
 var pgp = require('pg-promise')();
 var db = pgp('postgres://postgres:grimftw@localhost:5432/Chat');
+const crypto = require("crypto");
+function crypting(pass,alg="sha256",secret ="this is my secret",salt = "asjdkluhjsio8djkasn"){
+	return crypto.createHmac(alg,secret).update(`${salt}-${pass}`).digest("hex");
+}
 
 var users = 0;
 
@@ -35,6 +39,13 @@ server.listen(port,function(){
 });
 
 app.use("/public",express.static('public'));
+
+// io.to('games').on("connection",function(socket){
+// 	socket.on("joininggame",()=>{
+
+// 	})
+// })
+
 
 io.on('connection', function(socket){
 	users++;

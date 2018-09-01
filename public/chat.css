@@ -121,7 +121,7 @@ box-shadow: -1px -1px 15px 1px rgba(43,198,237,0.75);
   position: absolute;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, 25%);
+  transform: translate(-50%, 10%);
   
 }
 
@@ -132,7 +132,7 @@ box-shadow: -1px -1px 15px 1px rgba(43,198,237,0.75);
     position: absolute;
     top: 50%;
     left: 50%;
-    transform: translate(-50%,-50%);
+    transform: translate(-50%,-65%);
 }
 
 label {

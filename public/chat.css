@@ -114,6 +114,17 @@ transform:translate(-50%,25%);
 box-shadow: -1px -1px 15px 1px rgba(43,198,237,0.75);
 }
 
+.group2{
+  width: 400px;
+  height: 150px;
+  overflow: hidden;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, 25%);
+  
+}
+
 .group {
     width: 400px;
     height: 150px;
@@ -133,7 +144,7 @@ label {
   transition: 0.25s ease;
 }
 
-.group > input {
+.group > input , .group2 > input {
   display: block;
   width: 100%;
   padding-top: 36.6666666667px;
@@ -144,23 +155,23 @@ label {
   font-size: 36.6666666667px;
   transition: 0.3s ease;
 }
-.group > input:valid ~ label {
+.group > input:valid ~ label , .group2 > input:valid ~ label {
   top: 0;
   font: 700 22px Roboto;
   color: rgba(255, 255, 255, 0.5);
 }
-.group > input:focus {
+.group > input:focus ,.group2 > input:focus  {
   outline: none;
 }
-.group > input:focus ~ label {
+.group > input:focus ~ label , .group2 > input:focus ~ label {
   top: 0;
   font: 700 22px Roboto;
   color: #2196f3;
 }
-.group > input:focus ~ .bar:before {
+.group > input:focus ~ .bar:before , .group2 > input:focus ~ .bar:before {
   transform: translateX(0);
 }
-.group > input:-webkit-autofill {
+.group > input:-webkit-autofill , .group2 > input:-webkit-autofill {
   -webkit-box-shadow: 0 0 0px 1000px #333 inset;
   -webkit-text-fill-color: white !important;
 }
@@ -188,6 +199,7 @@ label {
 .sub{
 	  position: absolute;
     left: 50%;
+    bottom:10%;
     transform: translate(-50%);
     margin-top: 10px;
 		-moz-box-shadow: 0px 10px 14px -7px #85898a;

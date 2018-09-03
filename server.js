@@ -55,7 +55,9 @@ app.use("/public", express.static('public'));
 
 // 	})
 // })
-
+// async function insUser(){
+// 	var user = await 
+// }
 
 io.on('connection', function(socket){
 	users++;
@@ -82,6 +84,7 @@ app.use(body.urlencoded({
 	extended : true
 }))
 
+// CORS
 app.use(function(req, res, next) {
 	res.header("Access-Control-Allow-Origin", "*");
 	res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
@@ -89,11 +92,19 @@ app.use(function(req, res, next) {
 	next();
   });
 
+  //post route
 app.post('/user/entry',function(req,res){
-	console.log("ovo je body ",req.body);
-	res.status(200).json({
-		message : "Succesfully registred!"
+	db.none('INSERT INTO History(username,pass) VALUES($1,$2)',[req.body.name,req.body.pass])
+	.then(() =>{
+		res.status(200).json({
+			message : "Succesfully registred!"
+		})
 	})
+	.catch(() =>{
+		res.status(404).json({
+			message : "Sorry something went wrong."
+		})
+	})	
 })
 
  app.get("/",function(req,res){

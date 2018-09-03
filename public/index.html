@@ -1,35 +1,38 @@
 <!doctype html>
 <html>
-  <head>
-    <title>Chat-app</title>
- <link rel="stylesheet" href="../public/chat.css">
+
+<head>
+	<title>Chat-app</title>
+	<link rel="stylesheet" href="../public/chat.css">
 </head>
+
 <body>
-<div class="centered">
-	<div class="group">
-		<input type="text" id="name" required="required">
-		<label class="lab" for="name" >Name</label>
-		<div class="bar"></div>		
+	<div class="centered">
+		<div class="group">
+			<input type="text" id="name" required="required">
+			<label class="lab" for="name">Name</label>
+			<div class="bar"></div>
+		</div>
+		<div class="group2">
+			<input type="password" id="password" required="required">
+			<label class="lab" for="password">Password</label>
+			<div class="bar"></div>
+		</div>
+		<a href="#" class="sub">SUBMIT</a>
 	</div>
-	<div class="group2">
-		<input type="password" id="password" required="required">
-		<label class="lab" for="password" >Password</label>
-		<div class="bar"></div>		
+	<ul id="messages"></ul>
+	<div class="loader">
+		<div class="circle"></div>
+		<div class="circle"></div>
+		<div class="circle"></div>
 	</div>
-	<a href="#" class="sub">SUBMIT</a>
-</div>
-<ul id="messages"></ul>
-<div class="loader">
-	<div class="circle"></div>
-	<div class="circle"></div>
-	<div class="circle"></div>
-</div>
-<div class="type"></div>
-<div class="box">
-	<input id="m" autocomplete="off" disabled/><button class="send">Send</button>
-</div>
-<script src="/socket.io/socket.io.js"></script>
-<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
-<script src="../public/script.js"></script>
-  </body>
+	<div class="type"></div>
+	<div class="box">
+		<input id="m" autocomplete="off" disabled/><button class="send">Send</button>
+	</div>
+	<script src="/socket.io/socket.io.js"></script>
+	<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+	<script src="../public/script.js"></script>
+</body>
+
 </html>

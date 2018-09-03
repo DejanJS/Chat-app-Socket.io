@@ -44,12 +44,11 @@ getUser();
 
 
 io.listen(server);
-
-server.listen(port,function(){
-	console.log("Starting on this port",port)
+server.listen(port, function () {
+	console.log("Starting on this port", port)
 });
 
-app.use("/public",express.static('public'));
+app.use("/public", express.static('public'));
 
 // io.to('games').on("connection",function(socket){
 // 	socket.on("joininggame",()=>{
@@ -78,14 +77,24 @@ io.on('connection', function(socket){
   })
 });
 
-
-
 app.use(body.json())
 app.use(body.urlencoded({
 	extended : true
 }))
 
+app.use(function(req, res, next) {
+	res.header("Access-Control-Allow-Origin", "*");
+	res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+	res.header("Access-Control-Allow-Methods", "GET, POST, OPTIONS, PUT, DELETE");
+	next();
+  });
 
+app.post('/user/entry',function(req,res){
+	console.log("ovo je body ",req.body);
+	res.status(200).json({
+		message : "Succesfully registred!"
+	})
+})
 
  app.get("/",function(req,res){
  	res.sendFile(__dirname + "/public/index.html");

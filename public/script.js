@@ -1,10 +1,14 @@
 	$(function(){
 		var socket = io();
 		var username;
+		var password;
 	$('html > * :not(.centered):not(#name):not(.sub):not(.bar):not(.lab):not(.group):not(.group2').css("opacity",0.2)
 	$('.sub').click(function(){
-		// window.location.href.split('#')[0]
 		username = $('#name').val();
+		password = $('#password').val();
+		$.post('http://localhost:3000/user/entry',{name:username , pass : password},function(data){
+			console.log("this is msg : ",data.message);
+		});
 		console.log("this is user ",$('#name').val());
 		$('.centered').remove();
 		$('*').css("opacity",1);

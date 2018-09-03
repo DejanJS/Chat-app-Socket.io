@@ -238,7 +238,3 @@ label {
 	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#2c3f42', endColorstr='#0a171c',GradientType=0);
 	background-color:#2c3f42;
 }
-.sub:active {
-	position:relative;
-	top:1px;
-}

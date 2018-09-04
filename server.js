@@ -16,32 +16,12 @@ function crypting(pass,alg="sha256",secret ="this is my secret",salt = "asjdkluh
 
 var users = 0;
 
-// db.one('SELECT username FROM History')
-//   .then(function (data) {
-//     console.log('DATA:', data.username)
-//   })
-//   .catch(function (error) {
-//     console.log('ERROR:', error)
-//   })
 async function getUser(){
 	var data = await db.one('SELECT username FROM History'); // bob
 	console.log(data.username); // bob 
 };
 
 getUser();
-// async function printUser(){
-// console.log("am i getting data : ",await getUser());	
-// }
-// printUser();
-
-// db.none('INSERT INTO History(username) VALUES($1)',["Steven"])
-// .then(()=>{
-// 	console.log("added something")
-// })
-// .catch(err =>{
-// 	console.log("there was an err",err)
-// })
-
 
 io.listen(server);
 server.listen(port, function () {
@@ -53,35 +33,29 @@ app.use("/public", express.static('public'));
 // io.to('games').on("connection",function(socket){
 // 	socket.on("joininggame",()=>{
 
-// 	})
-// })
-// async function insUser(){
-// 	var user = await 
-// }
-
-io.on('connection', function(socket){
+io.on('connection', function (socket) {
 	users++;
-  console.log(`a user connected\nnumber of users : ${users}`);
-  console.log("Loopback : ", socket.handshake.address)
-  socket.on('disconnect',()=>{
-	  users--;
-	  console.log(`user disconnected\nnumber of users : ${users}`)
-  })
-  socket.on('chat message', function(msg){
-    console.log('message: ' + msg.msg);
-	io.emit("chat message",msg);
-  })
-  socket.on("typing",function(data){
-  	socket.broadcast.emit('typing',data)
-  })
-  socket.on("notyping",function(empty){
-  	socket.broadcast.emit("notyping",empty)
-  })
+	console.log(`a user connected\nnumber of users : ${users}`);
+	console.log("Loopback : ", socket.handshake.address)
+	socket.on('disconnect', () => {
+		users--;
+		console.log(`user disconnected\nnumber of users : ${users}`)
+	})
+	socket.on('chat message', function (msg) {
+		console.log('message: ' + msg.msg);
+		io.emit("chat message", msg);
+	})
+	socket.on("typing", function (data) {
+		socket.broadcast.emit('typing', data)
+	})
+	socket.on("notyping", function (empty) {
+		socket.broadcast.emit("notyping", empty)
+	})
 });
 
 app.use(body.json())
 app.use(body.urlencoded({
-	extended : true
+	extended: true
 }))
 
 // CORS
@@ -94,18 +68,21 @@ app.use(function(req, res, next) {
 
   //post route
 app.post('/user/entry',function(req,res){
-	db.none('INSERT INTO History(username,pass) VALUES($1,$2)',[req.body.name,req.body.pass])
-	.then(() =>{
-		res.status(200).json({
-			message : "Succesfully registred!"
-		})
+	db.one('SELECT NULLIF(MAX(ID)+1,1) as NewId FROM History')
+		.then(data => {
+			db.none('INSERT INTO History(id,username,pass) VALUES($1,$2,$3)', [data.newid, req.body.name, req.body.pass])
+				.then(() => {
+					res.status(200).json({
+						message: "Succesfully registred!"
+					})
+				})
+				.catch(() => {
+					res.status(404).json({
+						message: "Sorry something went wrong."
+					})
+				})
+		});
 	})
-	.catch(() =>{
-		res.status(404).json({
-			message : "Sorry something went wrong."
-		})
-	})	
-})
 
  app.get("/",function(req,res){
  	res.sendFile(__dirname + "/public/index.html");

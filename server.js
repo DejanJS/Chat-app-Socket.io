@@ -17,8 +17,14 @@ function crypting(pass,alg="sha256",secret ="this is my secret",salt = "asjdkluh
 var users = 0;
 
 async function getUser(){
-	var data = await db.one('SELECT username FROM History'); // bob
-	console.log(data.username); // bob 
+	try{
+		var data = await db.any('SELECT username FROM History');
+		data.map((usr,i)=>{
+			console.log(usr.username)
+		})		
+	} catch(e){
+		console.log("there was an error : ",e);
+	}
 };
 
 getUser();

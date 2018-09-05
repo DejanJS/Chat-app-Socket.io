@@ -10,24 +10,6 @@ const io = socket();
 var pgp = require('pg-promise')();
 var db = pgp('postgres://postgres:grimftw@localhost:5432/Chat');
 const crypto = require("crypto");
-function crypting(pass,alg="sha256",secret ="this is my secret",salt = "asjdkluhjsio8djkasn"){
-	return crypto.createHmac(alg,secret).update(`${salt}-${pass}`).digest("hex");
-}
-
-var users = 0;
-
-async function getUser(){
-	try{
-		var data = await db.any('SELECT username FROM History');
-		data.map((usr,i)=>{
-			console.log(usr.username)
-		})		
-	} catch(e){
-		console.log("there was an error : ",e);
-	}
-};
-
-getUser();
 
 io.listen(server);
 server.listen(port, function () {
@@ -35,29 +17,6 @@ server.listen(port, function () {
 });
 
 app.use("/public", express.static('public'));
-
-// io.to('games').on("connection",function(socket){
-// 	socket.on("joininggame",()=>{
-
-io.on('connection', function (socket) {
-	users++;
-	console.log(`a user connected\nnumber of users : ${users}`);
-	console.log("Loopback : ", socket.handshake.address)
-	socket.on('disconnect', () => {
-		users--;
-		console.log(`user disconnected\nnumber of users : ${users}`)
-	})
-	socket.on('chat message', function (msg) {
-		console.log('message: ' + msg.msg);
-		io.emit("chat message", msg);
-	})
-	socket.on("typing", function (data) {
-		socket.broadcast.emit('typing', data)
-	})
-	socket.on("notyping", function (empty) {
-		socket.broadcast.emit("notyping", empty)
-	})
-});
 
 app.use(body.json())
 app.use(body.urlencoded({
@@ -93,4 +52,50 @@ app.post('/user/entry',function(req,res){
  app.get("/",function(req,res){
  	res.sendFile(__dirname + "/public/index.html");
  })
+
+function crypting(pass,alg="sha256",secret ="this is my secret",salt = "asjdkluhjsio8djkasn"){
+	return crypto.createHmac(alg,secret).update(`${salt}-${pass}`).digest("hex");
+}
+
+var users = 0;
+
+async function getUser(){
+	try{
+		var data = await db.any('SELECT username FROM History');
+		data.map((usr,i)=>{
+			console.log(usr.username)
+		})		
+	} catch(e){
+		console.log("there was an error : ",e);
+	}
+};
+
+getUser();
+
+
+
+// io.to('games').on("connection",function(socket){
+// 	socket.on("joininggame",()=>{
+
+io.on('connection', function (socket) {
+	users++;
+	console.log(`a user connected\nnumber of users : ${users}`);
+	console.log("Loopback : ", socket.handshake.address)
+	socket.on('disconnect', () => {
+		users--;
+		console.log(`user disconnected\nnumber of users : ${users}`)
+	})
+	socket.on('chat message', function (msg) {
+		console.log('message: ' + msg.msg);
+		io.emit("chat message", msg);
+	})
+	socket.on("typing", function (data) {
+		socket.broadcast.emit('typing', data)
+	})
+	socket.on("notyping", function (empty) {
+		socket.broadcast.emit("notyping", empty)
+	})
+});
+
+
 

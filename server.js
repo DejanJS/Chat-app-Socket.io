@@ -33,9 +33,9 @@ app.use(function(req, res, next) {
 
   //post route
 app.post('/user/entry',function(req,res){
-	db.one('SELECT NULLIF(MAX(ID)+1,1) as NewId FROM History')
+	db.one('SELECT NULLIF(MAX(ID)+1,1) as NewId FROM Users')
 		.then(data => {
-			db.none('INSERT INTO History(id,username,pass) VALUES($1,$2,$3)', [data.newid, req.body.name, req.body.pass])
+			db.none('INSERT INTO Users(id,username,pass) VALUES($1,$2,$3)', [data.newid, req.body.name, req.body.pass])
 				.then(() => {
 					res.status(200).json({
 						message: "Succesfully registred!"
@@ -61,7 +61,7 @@ var users = 0;
 
 async function getUser(){
 	try{
-		var data = await db.any('SELECT username FROM History');
+		var data = await db.any('SELECT username FROM Users');
 		data.map((usr,i)=>{
 			console.log(usr.username)
 		})		

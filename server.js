@@ -35,26 +35,33 @@ app.use(function (req, res, next) {
 app.post('/user/entry',async function (req, res) {
 	let name = req.body.name;
 	let pass = req.body.pass;
-	if(await UserExists(name)){
-		if(await AuthUser(name,pass)){
-			res.status(200).json({
-				message:"Successfully logged in"
+	try{
+		if(!await UserExists(name)){
+			await InsertUser(name,pass)
+			? res.status(200).json({
+				message:"Successfully registred!"
 			})
-		} else{
-			res.status(401).json({
-				message:"bad user/pass...try again!"
+			: res.status(500).json({
+				message:"who knows what happened ?"
 			})
+			return;
 		}
-	} else if(await InsertUser(name,pass)){
-		res.status(200).json({
-			message:"Successfully registred"
+		await AuthUser(name,pass)
+		? res.status(200).json({
+			message:"Successfully logged in"
 		})
-	} else{
+		:res.status(401).json({
+			message:"bad user/pass...try again!"
+		})
+	} catch(e){
 		res.status(500).json({
-			message:"who knows what happened ?"
+			message: "Some error occured",
+			error : e
 		})
 	}
 })
+
+
 
 app.get("/", function (req, res) {
 	res.sendFile(__dirname + "/public/index.html");
@@ -110,7 +117,7 @@ async function InsertUser(name, pass) {
 
 
 async function UserExists(name) {
-	console.log("exist ",name);
+	console.log("exist ?",name);
 	var count = await db.one('SELECT COUNT(1) as Counter FROM Users WHERE Users.username = $1',name);
 	console.log("count ",count)
 	if (Number(count.counter) !== 0) {

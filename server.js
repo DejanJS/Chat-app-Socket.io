@@ -67,6 +67,19 @@ app.get("/", function (req, res) {
 	res.sendFile(__dirname + "/public/index.html");
 })
 
+app.get("/svc/messages", async function (req, res) {
+	try {
+		res.status(200).json(
+			await GetMsg()
+		)
+	} catch (e) {
+		res.status(500).json({
+			message: "there was some error..",
+			error: e
+		})
+	}
+})
+
 // function crypting(pass,alg="sha256",secret ="this is my secret",salt = "asjdkluhjsio8djkasn"){
 // 	return crypto.createHmac(alg,secret).update(`${salt}-${pass}`).digest("hex");
 // }
@@ -146,10 +159,17 @@ async function InsertMsg(user,msg){
 	var id = await GetId(user);
 	await db.none('INSERT INTO Messages(UserId,text,timestamp) VALUES($1,$2,current_timestamp)',[id,msg])
 }
-
-async function GetMsg(){
-
+async function GetMsg() {
+	return await db.any(`
+	SELECT 
+		Messages.id,
+		Users.username,
+		Messages.text,
+		Messages.timestamp
+	FROM Messages JOIN Users ON Users.id = Messages.UserId
+	`)
 }
+
 // io.to('games').on("connection",function(socket){
 // 	socket.on("joininggame",()=>{
 

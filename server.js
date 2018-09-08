@@ -137,7 +137,19 @@ async function AuthUser(name, pass) {
 	return false;
 }
 
+async function GetId(user){
+	return (await db.one("SELECT id FROM Users WHERE username = $1",user)).id;
+}
 
+
+async function InsertMsg(user,msg){
+	var id = await GetId(user);
+	await db.none('INSERT INTO Messages(UserId,text,timestamp) VALUES($1,$2,current_timestamp)',[id,msg])
+}
+
+async function GetMsg(){
+
+}
 // io.to('games').on("connection",function(socket){
 // 	socket.on("joininggame",()=>{
 
@@ -149,9 +161,15 @@ io.on('connection', function (socket) {
 		users--;
 		console.log(`user disconnected\nnumber of users : ${users}`)
 	})
-	socket.on('chat message', function (msg) {
-		console.log('message: ' + msg.msg);
-		io.emit("chat message", msg);
+	socket.on('chat message', async function (data) {
+		console.log('data: ', data);
+		io.emit("chat message", data);
+		try {
+			await InsertMsg(data.user, data.msg);
+		} catch (e) {
+			console.log("inserting message didn't go well.. ", e)
+		}
+
 	})
 	socket.on("typing", function (data) {
 		socket.broadcast.emit('typing', data)

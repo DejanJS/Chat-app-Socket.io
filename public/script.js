@@ -1,8 +1,17 @@
+	function writeMessage(user,msg){
+		$('#messages').append($('<li>').text(user + " : " + msg));
+	}
 	$(function(){
 		var socket = io();
 		var username;
 		var password;
 	$('html > * :not(.centered):not(#name):not(.sub):not(.bar):not(.lab):not(.group):not(.group2').css("opacity",0.2)
+	//[{"id":2,"username":"will","text":"did i insert","timestamp":"2018-09-08T12:47:33.761Z"},{"id":3,"username":"steve","text":"deadeaddead","timestamp":"2018-09-08T13:06:59.438Z"}]//
+	 $.get('/svc/messages',(data)=>{
+	 	data.map((msg)=>{
+			writeMessage(msg.username,msg.text);
+		 })
+	 })
 	$('.sub').click(function(){
 		username = $('#name').val();
 		password = $('#password').val();
@@ -32,7 +41,8 @@
 			socket.on("chat message",function(msg){
 				$('.loader').css("display","none");
 				$('.type').text('');
-				$('#messages').append($('<li>').text(msg.user + " : " + msg.msg));
+				// $('#messages').append($('<li>').text(msg.user + " : " + msg.msg));
+				writeMessage(msg.user,msg.msg);
 		 	})
 
 		 	$("#m").on("input",function(){

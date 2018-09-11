@@ -5,7 +5,8 @@
 		var socket = io();
 		var username;
 		var password;
-	$('html > * :not(.centered):not(#name):not(.sub):not(.bar):not(.lab):not(.group):not(.group2').css("opacity",0.2)
+	$('html > * :not(.centered):not(#name):not(.sub):not(.bar):not(.lab):not(.group):not(.group2').css("opacity",0.2);
+	
 	//[{"id":2,"username":"will","text":"did i insert","timestamp":"2018-09-08T12:47:33.761Z"},{"id":3,"username":"steve","text":"deadeaddead","timestamp":"2018-09-08T13:06:59.438Z"}]//
 	 $.get('/svc/messages',(data)=>{
 	 	data.map((msg)=>{
@@ -22,6 +23,7 @@
 		$('.centered').remove();
 		$('*').css("opacity",1);
 		$('#m').removeAttr("disabled");
+		$('#messages').css("display","block")
 	})
 
 	$('.send').click(function(){

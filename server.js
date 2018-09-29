@@ -67,6 +67,10 @@ app.get("/", function (req, res) {
 	res.sendFile(__dirname + "/public/index.html");
 })
 
+app.get('/svc/users',function(req,res){
+	res.send(userSocket);
+})
+
 app.get("/svc/messages", async function (req, res) {
 	try {
 		res.status(200).json(

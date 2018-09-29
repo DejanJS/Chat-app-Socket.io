@@ -172,13 +172,17 @@ async function GetMsg() {
 
 // io.to('games').on("connection",function(socket){
 // 	socket.on("joininggame",()=>{
+var userSocket = [];
 
 io.on('connection', function (socket) {
 	users++;
+	userSocket.push(socket.id);
+	// socket.join("default room",)
 	console.log(`a user connected\nnumber of users : ${users}`);
 	console.log("Loopback : ", socket.handshake.address)
 	socket.on('disconnect', () => {
 		users--;
+		userSocket.filter(us => us !== socket.id);
 		console.log(`user disconnected\nnumber of users : ${users}`)
 	})
 	socket.on('chat message', async function (data) {
@@ -198,3 +202,11 @@ io.on('connection', function (socket) {
 		socket.broadcast.emit("notyping", empty)
 	})
 });
+
+// function createRoom(name){
+// 	io.on("connection",function(socket){
+// 		socket.join(name);
+// 		socket.to(name).emit("")
+// 	})
+	
+// }

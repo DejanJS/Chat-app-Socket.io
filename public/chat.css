@@ -173,6 +173,7 @@ label {
   transform: translateX(0);
 }
 .group > input:-webkit-autofill , .group2 > input:-webkit-autofill {
+  box-shadow: 0 0 0px 1000px #333 inset;
   -webkit-box-shadow: 0 0 0px 1000px #333 inset;
   -webkit-text-fill-color: white !important;
 }

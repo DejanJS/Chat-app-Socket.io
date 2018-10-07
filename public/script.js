@@ -67,5 +67,12 @@
 		 	socket.on("notyping",function(empty){
 		 			$('.loader').css("display","none");	 		
 		 			$('.type').text(empty);		 				 		
-		 	})		
+			 })
+			 socket.on("User connected",function(data){
+				 $('.ulist').html('');
+				 data.users.map((user) =>{
+					 $('.ulist').append(`<li data=${user.id}>${user.uname}</li>`);
+					})
+				 console.log("user list array : ",data);
+			 })		
 	})

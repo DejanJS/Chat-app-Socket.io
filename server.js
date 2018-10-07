@@ -48,10 +48,10 @@ app.post('/user/entry',async function (req, res) {
 		? userOnlineResponse(obj,"Successfully logged in",res)
 		:msgResponse(401,"bad user/pass...try again!",res)
 	} catch(e){
-		res.status(500).json({
+		objResponse(500,{
 			message: "Some error occured",
 			error : e
-		})
+		},res)
 	}
 })
 
@@ -183,6 +183,7 @@ var currUser;
 //specific responder for userlogin event
 function userOnlineResponse(connectInfo,msg,res){
 	userSocket.push(connectInfo);
+	io.local.emit('User connected',{users:userSocket})
 	msgResponse(200,msg,res)
 }
 // Standard message responder
@@ -204,7 +205,7 @@ io.on('connection', function (socket) {
 	console.log("Loopback : ", socket.handshake.address)
 	socket.on('disconnect', () => {
 		users--;
-		userSocket.filter(us => us !== socket.id);
+		userSocket.filter(us => us.id !== socket.id);
 		console.log(`user disconnected\nnumber of users : ${users}`)
 	})
 	socket.on('chat message', async function (data) {

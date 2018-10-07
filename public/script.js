@@ -5,6 +5,7 @@
 		var socket = io();
 		var username;
 		var password;
+		var currSocket;
 	$('html > * :not(.centered):not(#name):not(.sub):not(.bar):not(.lab):not(.group):not(.group2)').css("opacity",0.2);
 	
 	//[{"id":2,"username":"will","text":"did i insert","timestamp":"2018-09-08T12:47:33.761Z"},{"id":3,"username":"steve","text":"deadeaddead","timestamp":"2018-09-08T13:06:59.438Z"}]//
@@ -13,10 +14,13 @@
 			writeMessage(msg.username,msg.text);
 		 })
 	 })
+	 $.get('/svc/curruser',function(data){
+		currSocket = data.id;
+	 })
 	$('.sub').click(function(){
 		username = $('#name').val();
 		password = $('#password').val();
-		$.post('http://localhost:3000/user/entry',{name:username , pass : password},function(data){
+		$.post('http://localhost:3000/user/entry',{name:username , pass : password,id:currSocket},function(data){
 			console.log("this is msg : ",data.message);
 		});
 		console.log("this is user ",$('#name').val());

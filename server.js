@@ -35,24 +35,18 @@ app.use(function (req, res, next) {
 app.post('/user/entry',async function (req, res) {
 	let name = req.body.name;
 	let pass = req.body.pass;
+	let sockid = req.body.id;
+	let obj = {uname: name,id:sockid};
 	try{
 		if(!await UserExists(name)){
 			await InsertUser(name,pass)
-			? res.status(200).json({
-				message:"Successfully registred!"
-			})
-			: res.status(500).json({
-				message:"who knows what happened ?"
-			})
+			? userOnlineResponse(obj,"Successfully registred",res)
+			: msgResponse(500,"who knows what happened ?",res)
 			return;
 		}
 		await AuthUser(name,pass)
-		? res.status(200).json({
-			message:"Successfully logged in"
-		})
-		:res.status(401).json({
-			message:"bad user/pass...try again!"
-		})
+		? userOnlineResponse(obj,"Successfully logged in",res)
+		:msgResponse(401,"bad user/pass...try again!",res)
 	} catch(e){
 		res.status(500).json({
 			message: "Some error occured",
@@ -67,8 +61,16 @@ app.get("/", function (req, res) {
 	res.sendFile(__dirname + "/public/index.html");
 })
 
-app.get('/svc/users',function(req,res){
+app.get('/svc/userslist',function(req,res){
 	res.send(userSocket);
+})
+
+
+
+app.get('/svc/curruser',function(req,res){
+	res.status(200).json({
+		id : currUser
+	})
 })
 
 app.get("/svc/messages", async function (req, res) {
@@ -177,10 +179,26 @@ async function GetMsg() {
 // io.to('games').on("connection",function(socket){
 // 	socket.on("joininggame",()=>{
 var userSocket = [];
+var currUser;
+//specific responder for userlogin event
+function userOnlineResponse(connectInfo,msg,res){
+	userSocket.push(connectInfo);
+	msgResponse(200,msg,res)
+}
+// Standard message responder
+function msgResponse(statuscode,msg,res){
+	objResponse(statuscode,{message:msg},res)
+}
+// Server respond
+function objResponse(statuscode,obj,res){
+	res.status(statuscode).json(obj)
+	
+}
 
 io.on('connection', function (socket) {
 	users++;
-	userSocket.push(socket.id);
+	currUser = socket.id;
+	// userSocket.push(socket.id);
 	// socket.join("default room",)
 	console.log(`a user connected\nnumber of users : ${users}`);
 	console.log("Loopback : ", socket.handshake.address)

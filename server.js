@@ -205,7 +205,7 @@ io.on('connection', function (socket) {
 	console.log("Loopback : ", socket.handshake.address)
 	socket.on('disconnect', () => {
 		users--;
-		userSocket.filter(us => us.id !== socket.id);
+		userSocket = userSocket.filter(us => us.id !== socket.id);
 		console.log(`user disconnected\nnumber of users : ${users}`)
 	})
 	socket.on('chat message', async function (data) {

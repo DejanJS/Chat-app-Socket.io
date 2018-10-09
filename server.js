@@ -206,6 +206,7 @@ io.on('connection', function (socket) {
 	socket.on('disconnect', () => {
 		users--;
 		userSocket = userSocket.filter(us => us.id !== socket.id);
+		io.local.emit("user disconnected",{users:userSocket})
 		console.log(`user disconnected\nnumber of users : ${users}`)
 	})
 	socket.on('chat message', async function (data) {

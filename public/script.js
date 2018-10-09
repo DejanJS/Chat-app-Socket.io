@@ -74,5 +74,11 @@
 					 $('.ulist').append(`<li data=${user.id}>${user.uname}</li>`);
 					})
 				 console.log("user list array : ",data);
+			 })
+			 socket.on("user disconnected",function(data){
+				$('.ulist').html('');
+				data.users.map((user) =>{
+					$('.ulist').append(`<li data=${user.id}>${user.uname}</li>`);
+				   })
 			 })		
 	})

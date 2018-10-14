@@ -1,3 +1,4 @@
+@import url(https://fonts.googleapis.com/css?family=Montserrat);
 * { 
   margin: 0;
   padding: 0; 
@@ -331,4 +332,27 @@ label {
 	text-align:center;
 	color:white;
   padding-top:10px;
+}
+.ulist{
+  list-style: none;
+  width: auto;
+  text-align: center;
+  padding: 0;
+  margin: 0;
+  margin-top: 10px;
+}
+
+.ulist > li{
+  font-size:25px;
+	padding:10px;
+	margin-top:5px;
+	margin-bottom:5px;
+	font-weight:700;
+	font-family:'Montserrat';
+}
+
+ul > li:hover{
+	background:white;
+	box-sizing:border-box;
+	cursor:pointer;
 }

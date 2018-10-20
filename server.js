@@ -225,6 +225,10 @@ io.on('connection', function (socket) {
 	socket.on("notyping", function (empty) {
 		socket.broadcast.emit("notyping", empty)
 	})
+	socket.on("toUser",data =>{
+		console.log("we got a message",data)
+		io.to(data.id + "").emit("toUser",{message : data.print,user:data.id,from:data.from,username:data.fromUser})
+	})
 });
 
 // function createRoom(name){

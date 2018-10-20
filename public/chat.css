@@ -469,7 +469,7 @@ ul > li:hover{
 .fixedcont{
 	display:flex;
 	position:fixed;
-	bottom:0px;
+	bottom:38px;
 }
 .fixedcont > *{
 	margin:5px;

@@ -59,7 +59,14 @@
 			 		},2000)	
 		 		}		 		
 		 	})
-
+			 function Whisper(id,userMsg){
+				socket.emit("toUser",{
+					id :id,
+					print:userMsg,
+					from : currSocket,
+					fromUser: username
+				})
+			 }
 		 	socket.on("typing",function(data){
 		 		$('.loader').css("display","inline-block");
 		 		$('.type').html("<em>" + data + " is typing..." + "</em>")
@@ -73,6 +80,7 @@
 				 data.users.map((user) =>{
 					 $('.ulist').append(`<li data=${user.id}>${user.uname}</li>`);
 					})
+					openChat()
 				 console.log("user list array : ",data);
 			 })
 			 socket.on("user disconnected",function(data){
@@ -80,5 +88,166 @@
 				data.users.map((user) =>{
 					$('.ulist').append(`<li data=${user.id}>${user.uname}</li>`);
 				   })
-			 })		
+				   openChat()
+			 })
+			 socket.on("toUser",data=>{
+				 console.log("received data from user",data);
+				 if($(`.container[data=${data.from}]`).length === 0){
+					 $('.fixedcont').append(`<div class="container" data=${data.from} >
+					 <header class="header" data=${data.from}>
+						 <span class="usernamex" data=${data.from}>${data.username}</span>
+						 <button class="close">X</button>
+					 </header>
+					 <section class="chatwindow" data=${data.from}>
+						<div class="box2">
+						<h1>${data.username}</h1>
+						<p>${data.message}</p>	 
+				   	</div>
+					 </section>
+					 <form class="chatin" onsubmit="return false;">
+						 <input type="text" placeholder="enter message.." class="message" data=${data.from}>
+						 <button class="subx" data=${data.from}>
+							 <svg style="width:24px;height:24px" viewBox="0 0 24 24"><path fill="rgba(0,0,0,.38)" d="M17,12L12,17V14H8V10H12V7L17,12M21,16.5C21,16.88 20.79,17.21 20.47,17.38L12.57,21.82C12.41,21.94 12.21,22 12,22C11.79,22 11.59,21.94 11.43,21.82L3.53,17.38C3.21,17.21 3,16.88 3,16.5V7.5C3,7.12 3.21,6.79 3.53,6.62L11.43,2.18C11.59,2.06 11.79,2 12,2C12.21,2 12.41,2.06 12.57,2.18L20.47,6.62C20.79,6.79 21,7.12 21,7.5V16.5M12,4.15L5,8.09V15.91L12,19.85L19,15.91V8.09L12,4.15Z" /></svg>	
+						 </button>
+					 </form>
+					 </div>`)
+
+				 } else{
+					$(`.chatwindow[data=${data.from}]`).append(` <div class="box2">
+					<h1>${data.username}</h1>
+					<p>${data.message}</p>
+					
+				  </div>`)
+				 }
+				 $(`.message[data=${data.from}]`).on("keyup",function(e) {
+					buttonState(this);
+				  });
+				  
+				  
+				  $(`.header[data=${data.from}], .usernamex[data=${data.from}]`).click(function(e) {
+					e.stopPropagation();
+					let data = e.target.parentElement.getAttribute('data');
+					let dflag = $(".container[data='" + data + "']").attr("data-flag");
+					console.log("dflag ?", dflag)
+					if (!dflag || dflag === "false") {
+					  $(".container[data='" + data + "']").height("45px");
+					  $(".container[data='" + data + "']").width("200px")
+					  dflag = $(".container[data='" + data + "']").attr("data-flag", "true").attr("data-flag");
+					} else {
+					  $(".container[data='" + data + "']").height("500px");
+					  $(".container[data='" + data + "']").width("500px");
+					  dflag = $(".container[data='" + data + "']").attr("data-flag", "false").attr("data-flag");
+					}
+				  })
+				  $(`.close`).click(function(e) {
+					let closing = e.target.parentElement.getAttribute("data");
+					$(`.container[data=${closing}]`).remove();
+				  })
+
+				$(`.subx[data=${data.from}]`).click(function() {
+					console.log("sending to user", data.from)
+					let msg = $(`.message[data=${data.from}]`).val();
+					Whisper(data.from, msg);
+					$(`.chatwindow[data=${data.from}]`).append(` <div class="box1">
+					<h1>${username}</h1>
+					<p>${msg}</p>
+					
+				  </div>`)
+					$(`.message[data=${data.from}]`).val('')
+					buttonState(`.message[data=${data.from}]`);
+				})
+			})
+
+			 
+			function buttonState(button){
+				if ($(button).val() == ''){
+					console.log("button off")
+					  $(button).removeAttr('good');
+					}
+					else{
+						console.log("button on")
+					  $(button).attr('good', '');
+					}
+			}
+
+			 function openChat(){ // test = socketid / currsocket
+				$('.ulist > li').click(function(e) {
+					var toWho = $(this).text();
+					uid = e.target.getAttribute('data');
+					console.log("hmm?", currSocket)
+					if (uid === currSocket) {
+						return false;
+					}
+					console.log("sending to ", uid)
+					var eh;
+					var arr = $('.fixedcont > .container');
+					arr.each(function() {
+						if ($(this).attr("data") === uid) {
+							eh = true;
+							return;
+						}
+					})
+					if (eh) {
+						return false;
+					}
+					$('.fixedcont').append(`<div class="container" data=${uid} >
+					<header class="header" data=${uid}>
+						<span class="usernamex" data=${uid}>${toWho}</span>
+						<button class="close">X</button>
+					</header>
+					<section class="chatwindow" data=${uid}>
+						   
+					</section>
+					<form class="chatin" onsubmit="return false;">
+						<input type="text" placeholder="enter message.." class="message" data=${uid}>
+						<button class="subx" data=${uid}>
+							<svg style="width:24px;height:24px" viewBox="0 0 24 24"><path fill="rgba(0,0,0,.38)" d="M17,12L12,17V14H8V10H12V7L17,12M21,16.5C21,16.88 20.79,17.21 20.47,17.38L12.57,21.82C12.41,21.94 12.21,22 12,22C11.79,22 11.59,21.94 11.43,21.82L3.53,17.38C3.21,17.21 3,16.88 3,16.5V7.5C3,7.12 3.21,6.79 3.53,6.62L11.43,2.18C11.59,2.06 11.79,2 12,2C12.21,2 12.41,2.06 12.57,2.18L20.47,6.62C20.79,6.79 21,7.12 21,7.5V16.5M12,4.15L5,8.09V15.91L12,19.85L19,15.91V8.09L12,4.15Z" /></svg>	
+						</button>
+					</form>
+					</div>`)
+					// adding chatbox animation
+					$(`.message[data=${uid}]`).on("keyup",function(e) {
+						// console.log("keyup",e.keyCode)
+					buttonState(this);
+					  });
+					  
+					  
+					  $(`.header[data=${uid}], .usernamex[data=${uid}]`).click(function(e) {
+						e.stopPropagation();
+						let data = e.target.parentElement.getAttribute('data');
+						let dflag = $(".container[data='" + data + "']").attr("data-flag");
+						console.log("dflag ?", dflag)
+						if (!dflag || dflag === "false") {
+						  $(".container[data='" + data + "']").height("45px");
+						  $(".container[data='" + data + "']").width("200px")
+						  dflag = $(".container[data='" + data + "']").attr("data-flag", "true").attr("data-flag");
+						} else {
+						  $(".container[data='" + data + "']").height("500px");
+						  $(".container[data='" + data + "']").width("500px");
+						  dflag = $(".container[data='" + data + "']").attr("data-flag", "false").attr("data-flag");
+						}
+					  })
+					  $(`.close`).click(function(e) {
+						let closing = e.target.parentElement.getAttribute("data");
+						$(`.container[data=${closing}]`).remove();
+					  })
+
+					$(`.subx[data=${uid}]`).click(function() {
+						console.log("sending to user", uid)
+						let msg = $(`.message[data=${uid}]`).val();
+						Whisper(uid, msg);
+						$(`.chatwindow[data=${uid}]`).append(` <div class="box1">
+						<h1>${username}</h1>
+						<p>${msg}</p>
+						
+					  </div>`)
+						$(`.message[data=${uid}]`).val('')
+						buttonState(`.message[data=${uid}]`)
+					})
+				})
+			 }
+			 function chatAnimation(){
+
+			 }
+
 	})

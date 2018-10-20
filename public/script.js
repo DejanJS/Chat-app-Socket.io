@@ -1,99 +1,99 @@
-	function writeMessage(user,msg){
-		$('#messages').append($('<li>').text(user + " : " + msg));
-	}
-	$(function(){
-		var socket = io();
-		var username;
-		var password;
-		var currSocket;
-	$('html > * :not(.centered):not(#name):not(.sub):not(.bar):not(.lab):not(.group):not(.group2)').css("opacity",0.2);
-	
+function writeMessage(user, msg) {
+	$('#messages').append($('<li>').text(user + " : " + msg));
+}
+$(function () {
+	var socket = io();
+	var username;
+	var password;
+	var currSocket;
+	$('html > * :not(.centered):not(#name):not(.sub):not(.bar):not(.lab):not(.group):not(.group2)').css("opacity", 0.2);
+
 	//[{"id":2,"username":"will","text":"did i insert","timestamp":"2018-09-08T12:47:33.761Z"},{"id":3,"username":"steve","text":"deadeaddead","timestamp":"2018-09-08T13:06:59.438Z"}]//
-	 $.get('/svc/messages',(data)=>{
-	 	data.map((msg)=>{
-			writeMessage(msg.username,msg.text);
-		 })
-	 })
-	 $.get('/svc/curruser',function(data){
+	$.get('/svc/messages', (data) => {
+		data.map((msg) => {
+			writeMessage(msg.username, msg.text);
+		})
+	})
+	$.get('/svc/curruser', function (data) {
 		currSocket = data.id;
-	 })
-	$('.sub').click(function(){
+	})
+	$('.sub').click(function () {
 		username = $('#name').val();
 		password = $('#password').val();
-		$.post('http://localhost:3000/user/entry',{name:username , pass : password,id:currSocket},function(data){
-			console.log("this is msg : ",data.message);
+		$.post('http://localhost:3000/user/entry', { name: username, pass: password, id: currSocket }, function (data) {
+			console.log("this is msg : ", data.message);
 		});
-		console.log("this is user ",$('#name').val());
+		console.log("this is user ", $('#name').val());
 		$('.centered').remove();
-		$('*').css("opacity",1);
+		$('*').css("opacity", 1);
 		$('#m').removeAttr("disabled");
-		$('#messages').css("display","block")
+		$('#messages').css("display", "block")
 	})
 
-	$('.send').click(function(){
-		if($('.centered').length <= 0){
-		socket.emit('chat message',{ msg : $('#m').val(), user : username});
+	$('.send').click(function () {
+		if ($('.centered').length <= 0) {
+			socket.emit('chat message', { msg: $('#m').val(), user: username });
 			$('#m').val('');
 		}
 		return false;
-		
-	})
-		$('#m').keyup(function(e){
-			if(e.which === 13){
-			socket.emit("chat message",{ msg : $(this).val(), user : username});
-				$(this).val('')
-			}
-		})
-			socket.on("chat message",function(msg){
-				$('.loader').css("display","none");
-				$('.type').text('');
-				// $('#messages').append($('<li>').text(msg.user + " : " + msg.msg));
-				writeMessage(msg.user,msg.msg);
-		 	})
 
-		 	$("#m").on("input",function(){
-		 		socket.emit("typing",username);
-		 		if(true){ // small typing hack
-			 		setTimeout(function(){
-			 			socket.emit("notyping",'')	
-			 		},2000)	
-		 		}		 		
-		 	})
-			 function Whisper(id,userMsg){
-				socket.emit("toUser",{
-					id :id,
-					print:userMsg,
-					from : currSocket,
-					fromUser: username
-				})
-			 }
-		 	socket.on("typing",function(data){
-		 		$('.loader').css("display","inline-block");
-		 		$('.type').html("<em>" + data + " is typing..." + "</em>")
-		 	})
-		 	socket.on("notyping",function(empty){
-		 			$('.loader').css("display","none");	 		
-		 			$('.type').text(empty);		 				 		
-			 })
-			 socket.on("User connected",function(data){
-				 $('.ulist').html('');
-				 data.users.map((user) =>{
-					 $('.ulist').append(`<li data=${user.id}>${user.uname}</li>`);
-					})
-					openChat()
-				 console.log("user list array : ",data);
-			 })
-			 socket.on("user disconnected",function(data){
-				$('.ulist').html('');
-				data.users.map((user) =>{
-					$('.ulist').append(`<li data=${user.id}>${user.uname}</li>`);
-				   })
-				   openChat()
-			 })
-			 socket.on("toUser",data=>{
-				 console.log("received data from user",data);
-				 if($(`.container[data=${data.from}]`).length === 0){
-					 $('.fixedcont').append(`<div class="container" data=${data.from} >
+	})
+	$('#m').keyup(function (e) {
+		if (e.which === 13) {
+			socket.emit("chat message", { msg: $(this).val(), user: username });
+			$(this).val('')
+		}
+	})
+	socket.on("chat message", function (msg) {
+		$('.loader').css("display", "none");
+		$('.type').text('');
+		// $('#messages').append($('<li>').text(msg.user + " : " + msg.msg));
+		writeMessage(msg.user, msg.msg);
+	})
+
+	$("#m").on("input", function () {
+		socket.emit("typing", username);
+		if (true) { // small typing hack
+			setTimeout(function () {
+				socket.emit("notyping", '')
+			}, 2000)
+		}
+	})
+	function Whisper(id, userMsg) {
+		socket.emit("toUser", {
+			id: id,
+			print: userMsg,
+			from: currSocket,
+			fromUser: username
+		})
+	}
+	socket.on("typing", function (data) {
+		$('.loader').css("display", "inline-block");
+		$('.type').html("<em>" + data + " is typing..." + "</em>")
+	})
+	socket.on("notyping", function (empty) {
+		$('.loader').css("display", "none");
+		$('.type').text(empty);
+	})
+	socket.on("User connected", function (data) {
+		$('.ulist').html('');
+		data.users.map((user) => {
+			$('.ulist').append(`<li data=${user.id}>${user.uname}</li>`);
+		})
+		openChat()
+		console.log("user list array : ", data);
+	})
+	socket.on("user disconnected", function (data) {
+		$('.ulist').html('');
+		data.users.map((user) => {
+			$('.ulist').append(`<li data=${user.id}>${user.uname}</li>`);
+		})
+		openChat()
+	})
+	socket.on("toUser", data => {
+		console.log("received data from user", data);
+		if ($(`.container[data=${data.from}]`).length === 0) {
+			$('.fixedcont').append(`<div class="container" data=${data.from} >
 					 <header class="header" data=${data.from}>
 						 <span class="usernamex" data=${data.from}>${data.username}</span>
 						 <button class="close">X</button>
@@ -112,85 +112,85 @@
 					 </form>
 					 </div>`)
 
-				 } else{
-					$(`.chatwindow[data=${data.from}]`).append(` <div class="box2">
+		} else {
+			$(`.chatwindow[data=${data.from}]`).append(` <div class="box2">
 					<h1>${data.username}</h1>
 					<p>${data.message}</p>
 					
 				  </div>`)
-				 }
-				 $(`.message[data=${data.from}]`).on("keyup",function(e) {
-					buttonState(this);
-				  });
-				  
-				  
-				  $(`.header[data=${data.from}], .usernamex[data=${data.from}]`).click(function(e) {
-					e.stopPropagation();
-					let data = e.target.parentElement.getAttribute('data');
-					let dflag = $(".container[data='" + data + "']").attr("data-flag");
-					console.log("dflag ?", dflag)
-					if (!dflag || dflag === "false") {
-					  $(".container[data='" + data + "']").height("45px");
-					  $(".container[data='" + data + "']").width("200px")
-					  dflag = $(".container[data='" + data + "']").attr("data-flag", "true").attr("data-flag");
-					} else {
-					  $(".container[data='" + data + "']").height("500px");
-					  $(".container[data='" + data + "']").width("500px");
-					  dflag = $(".container[data='" + data + "']").attr("data-flag", "false").attr("data-flag");
-					}
-				  })
-				  $(`.close`).click(function(e) {
-					let closing = e.target.parentElement.getAttribute("data");
-					$(`.container[data=${closing}]`).remove();
-				  })
+		}
+		$(`.message[data=${data.from}]`).on("keyup", function (e) {
+			buttonState(this);
+		});
 
-				$(`.subx[data=${data.from}]`).click(function() {
-					console.log("sending to user", data.from)
-					let msg = $(`.message[data=${data.from}]`).val();
-					Whisper(data.from, msg);
-					$(`.chatwindow[data=${data.from}]`).append(` <div class="box1">
+
+		$(`.header[data=${data.from}], .usernamex[data=${data.from}]`).click(function (e) {
+			e.stopPropagation();
+			let data = e.target.parentElement.getAttribute('data');
+			let dflag = $(".container[data='" + data + "']").attr("data-flag");
+			console.log("dflag ?", dflag)
+			if (!dflag || dflag === "false") {
+				$(".container[data='" + data + "']").height("45px");
+				$(".container[data='" + data + "']").width("200px")
+				dflag = $(".container[data='" + data + "']").attr("data-flag", "true").attr("data-flag");
+			} else {
+				$(".container[data='" + data + "']").height("500px");
+				$(".container[data='" + data + "']").width("500px");
+				dflag = $(".container[data='" + data + "']").attr("data-flag", "false").attr("data-flag");
+			}
+		})
+		$(`.close`).click(function (e) {
+			let closing = e.target.parentElement.getAttribute("data");
+			$(`.container[data=${closing}]`).remove();
+		})
+
+		$(`.subx[data=${data.from}]`).click(function () {
+			console.log("sending to user", data.from)
+			let msg = $(`.message[data=${data.from}]`).val();
+			Whisper(data.from, msg);
+			$(`.chatwindow[data=${data.from}]`).append(` <div class="box1">
 					<h1>${username}</h1>
 					<p>${msg}</p>
 					
 				  </div>`)
-					$(`.message[data=${data.from}]`).val('')
-					buttonState(`.message[data=${data.from}]`);
-				})
-			})
+			$(`.message[data=${data.from}]`).val('')
+			buttonState(`.message[data=${data.from}]`);
+		})
+	})
 
-			 
-			function buttonState(button){
-				if ($(button).val() == ''){
-					console.log("button off")
-					  $(button).removeAttr('good');
-					}
-					else{
-						console.log("button on")
-					  $(button).attr('good', '');
-					}
+
+	function buttonState(button) {
+		if ($(button).val() == '') {
+			console.log("button off")
+			$(button).removeAttr('good');
+		}
+		else {
+			console.log("button on")
+			$(button).attr('good', '');
+		}
+	}
+
+	function openChat() { // test = socketid / currsocket
+		$('.ulist > li').click(function (e) {
+			var toWho = $(this).text();
+			uid = e.target.getAttribute('data');
+			console.log("hmm?", currSocket)
+			if (uid === currSocket) {
+				return false;
 			}
-
-			 function openChat(){ // test = socketid / currsocket
-				$('.ulist > li').click(function(e) {
-					var toWho = $(this).text();
-					uid = e.target.getAttribute('data');
-					console.log("hmm?", currSocket)
-					if (uid === currSocket) {
-						return false;
-					}
-					console.log("sending to ", uid)
-					var eh;
-					var arr = $('.fixedcont > .container');
-					arr.each(function() {
-						if ($(this).attr("data") === uid) {
-							eh = true;
-							return;
-						}
-					})
-					if (eh) {
-						return false;
-					}
-					$('.fixedcont').append(`<div class="container" data=${uid} >
+			console.log("sending to ", uid)
+			var eh;
+			var arr = $('.fixedcont > .container');
+			arr.each(function () {
+				if ($(this).attr("data") === uid) {
+					eh = true;
+					return;
+				}
+			})
+			if (eh) {
+				return false;
+			}
+			$('.fixedcont').append(`<div class="container" data=${uid} >
 					<header class="header" data=${uid}>
 						<span class="usernamex" data=${uid}>${toWho}</span>
 						<button class="close">X</button>
@@ -205,46 +205,46 @@
 						</button>
 					</form>
 					</div>`)
-					// adding chatbox animation
-					$(`.message[data=${uid}]`).on("keyup",function(e) {
-						// console.log("keyup",e.keyCode)
-					buttonState(this);
-					  });
-					  
-					  
-					  $(`.header[data=${uid}], .usernamex[data=${uid}]`).click(function(e) {
-						e.stopPropagation();
-						let data = e.target.parentElement.getAttribute('data');
-						let dflag = $(".container[data='" + data + "']").attr("data-flag");
-						console.log("dflag ?", dflag)
-						if (!dflag || dflag === "false") {
-						  $(".container[data='" + data + "']").height("45px");
-						  $(".container[data='" + data + "']").width("200px")
-						  dflag = $(".container[data='" + data + "']").attr("data-flag", "true").attr("data-flag");
-						} else {
-						  $(".container[data='" + data + "']").height("500px");
-						  $(".container[data='" + data + "']").width("500px");
-						  dflag = $(".container[data='" + data + "']").attr("data-flag", "false").attr("data-flag");
-						}
-					  })
-					  $(`.close`).click(function(e) {
-						let closing = e.target.parentElement.getAttribute("data");
-						$(`.container[data=${closing}]`).remove();
-					  })
+			// adding chatbox animation
+			$(`.message[data=${uid}]`).on("keyup", function (e) {
+				// console.log("keyup",e.keyCode)
+				buttonState(this);
+			});
 
-					$(`.subx[data=${uid}]`).click(function() {
-						console.log("sending to user", uid)
-						let msg = $(`.message[data=${uid}]`).val();
-						Whisper(uid, msg);
-						$(`.chatwindow[data=${uid}]`).append(` <div class="box1">
+
+			$(`.header[data=${uid}], .usernamex[data=${uid}]`).click(function (e) {
+				e.stopPropagation();
+				let data = e.target.parentElement.getAttribute('data');
+				let dflag = $(".container[data='" + data + "']").attr("data-flag");
+				console.log("dflag ?", dflag)
+				if (!dflag || dflag === "false") {
+					$(".container[data='" + data + "']").height("45px");
+					$(".container[data='" + data + "']").width("200px")
+					dflag = $(".container[data='" + data + "']").attr("data-flag", "true").attr("data-flag");
+				} else {
+					$(".container[data='" + data + "']").height("500px");
+					$(".container[data='" + data + "']").width("500px");
+					dflag = $(".container[data='" + data + "']").attr("data-flag", "false").attr("data-flag");
+				}
+			})
+			$(`.close`).click(function (e) {
+				let closing = e.target.parentElement.getAttribute("data");
+				$(`.container[data=${closing}]`).remove();
+			})
+
+			$(`.subx[data=${uid}]`).click(function () {
+				console.log("sending to user", uid)
+				let msg = $(`.message[data=${uid}]`).val();
+				Whisper(uid, msg);
+				$(`.chatwindow[data=${uid}]`).append(` <div class="box1">
 						<h1>${username}</h1>
 						<p>${msg}</p>
 						
 					  </div>`)
-						$(`.message[data=${uid}]`).val('')
-						buttonState(`.message[data=${uid}]`)
-					})
-				})
-			 }
-			
-	})
+				$(`.message[data=${uid}]`).val('')
+				buttonState(`.message[data=${uid}]`)
+			})
+		})
+	}
+
+})

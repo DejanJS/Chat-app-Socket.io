@@ -124,38 +124,6 @@ $(function () {
 		});
 
 			UIrender(data.from);
-		// $(`.header[data=${data.from}], .usernamex[data=${data.from}]`).click(function (e) {
-		// 	e.stopPropagation();
-		// 	let data = e.target.parentElement.getAttribute('data');
-		// 	let dflag = $(".container[data='" + data + "']").attr("data-flag");
-		// 	console.log("dflag ?", dflag)
-		// 	if (!dflag || dflag === "false") {
-		// 		$(".container[data='" + data + "']").height("45px");
-		// 		$(".container[data='" + data + "']").width("200px")
-		// 		dflag = $(".container[data='" + data + "']").attr("data-flag", "true").attr("data-flag");
-		// 	} else {
-		// 		$(".container[data='" + data + "']").height("500px");
-		// 		$(".container[data='" + data + "']").width("500px");
-		// 		dflag = $(".container[data='" + data + "']").attr("data-flag", "false").attr("data-flag");
-		// 	}
-		// })
-		// $(`.close`).click(function (e) {
-		// 	let closing = e.target.parentElement.getAttribute("data");
-		// 	$(`.container[data=${closing}]`).remove();
-		// })
-
-		// $(`.subx[data=${data.from}]`).click(function () {
-		// 	console.log("sending to user", data.from)
-		// 	let msg = $(`.message[data=${data.from}]`).val();
-		// 	Whisper(data.from, msg);
-		// 	$(`.chatwindow[data=${data.from}]`).append(` <div class="box1">
-		// 			<h1>${username}</h1>
-		// 			<p>${msg}</p>
-					
-		// 		  </div>`)
-		// 	$(`.message[data=${data.from}]`).val('')
-		// 	buttonState(`.message[data=${data.from}]`);
-		// })
 	})
 
 
@@ -212,38 +180,6 @@ $(function () {
 			});
 
 				UIrender(uid)
-			// $(`.header[data=${uid}], .usernamex[data=${uid}]`).click(function (e) {
-			// 	e.stopPropagation();
-			// 	let data = e.target.parentElement.getAttribute('data');
-			// 	let dflag = $(".container[data='" + data + "']").attr("data-flag");
-			// 	console.log("dflag ?", dflag)
-			// 	if (!dflag || dflag === "false") {
-			// 		$(".container[data='" + data + "']").height("45px");
-			// 		$(".container[data='" + data + "']").width("200px")
-			// 		dflag = $(".container[data='" + data + "']").attr("data-flag", "true").attr("data-flag");
-			// 	} else {
-			// 		$(".container[data='" + data + "']").height("500px");
-			// 		$(".container[data='" + data + "']").width("500px");
-			// 		dflag = $(".container[data='" + data + "']").attr("data-flag", "false").attr("data-flag");
-			// 	}
-			// })
-			// $(`.close`).click(function (e) {
-			// 	let closing = e.target.parentElement.getAttribute("data");
-			// 	$(`.container[data=${closing}]`).remove();
-			// })
-
-			// $(`.subx[data=${uid}]`).click(function () {
-			// 	console.log("sending to user", uid)
-			// 	let msg = $(`.message[data=${uid}]`).val();
-			// 	Whisper(uid, msg);
-			// 	$(`.chatwindow[data=${uid}]`).append(` <div class="box1">
-			// 			<h1>${username}</h1>
-			// 			<p>${msg}</p>
-						
-			// 		  </div>`)
-			// 	$(`.message[data=${uid}]`).val('')
-			// 	buttonState(`.message[data=${uid}]`)
-			// })
 		})
 	}
 

@@ -419,6 +419,7 @@ ul>li:hover {
   max-width: 80%;
   margin-top: 10px;
   margin-bottom: 10px;
+  width:max-content;
 
 }
 .box2 > h1{
@@ -434,6 +435,7 @@ ul>li:hover {
   margin-top: 10px;
   margin-bottom: 10px;
   max-width: 80%;
+  width:max-content;
 }
 
 

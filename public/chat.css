@@ -417,14 +417,20 @@ ul>li:hover {
 .box1 {
   /* sender box */
   max-width: 80%;
-  margin-left: auto;
   margin-top: 10px;
   margin-bottom: 10px;
 
 }
+.box2 > h1{
+  float:right;
+}
+.box2 > p{
+  clear:both;
+}
 
 .box2 {
   /* receiver box */
+  margin-left: auto;
   margin-top: 10px;
   margin-bottom: 10px;
   max-width: 80%;

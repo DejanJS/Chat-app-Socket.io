@@ -45,20 +45,36 @@ $(function () {
 		}
 	})
 	socket.on("chat message", function (msg) {
-		$('.loader').css("display", "none");
-		$('.type').text('');
+		// $('.loader').css("display", "none");
+		// $('.type').text('');
 		// $('#messages').append($('<li>').text(msg.user + " : " + msg.msg));
 		writeMessage(msg.user, msg.msg);
 	})
 
-	$("#m").on("input", function () {
-		socket.emit("typing", username);
+	// $("#m").on("input", function () {
+	// 	socket.emit("typing", username);
+	// 	if (true) { // small typing hack
+	// 		setTimeout(function () {
+	// 			socket.emit("notyping", '')
+	// 		}, 2000)
+	// 	}
+	// })
+
+	function Typing(id){
+		socket.emit('isTyping',{
+			from:currSocket,
+			to: id
+		});
 		if (true) { // small typing hack
 			setTimeout(function () {
-				socket.emit("notyping", '')
+				socket.emit("notyping", {
+					from:currSocket,
+					to: id
+				})
 			}, 2000)
 		}
-	})
+	}
+
 	function Whisper(id, userMsg) {
 		socket.emit("toUser", {
 			id: id,
@@ -67,13 +83,14 @@ $(function () {
 			fromUser: username
 		})
 	}
-	socket.on("typing", function (data) {
-		$('.loader').css("display", "inline-block");
-		$('.type').html("<em>" + data + " is typing..." + "</em>")
+	socket.on("isTyping", function (data) {
+		$('.loader').css("display", "flex");
+		console.log("is typing : ",data)
+		// $('.type').html("<em>" + data + " is typing..." + "</em>")
 	})
-	socket.on("notyping", function (empty) {
+	socket.on("notyping", function (data) {
 		$('.loader').css("display", "none");
-		$('.type').text(empty);
+		console.log("not typing : ",data)
 	})
 	socket.on("User connected", function (data) {
 		$('.ulist').html('');
@@ -90,6 +107,7 @@ $(function () {
 		})
 		openChat()
 	})
+	//reciever
 	socket.on("toUser", data => {
 		console.log("received data from user", data);
 		if ($(`.container[data=${data.from}]`).length === 0) {
@@ -99,10 +117,15 @@ $(function () {
 						 <button class="close">X</button>
 					 </header>
 					 <section class="chatwindow" data=${data.from}>
-						<div class="box2">
+					<div class="box2">
 						<h1>${data.username}</h1>
 						<p>${data.message}</p>	 
-				   	</div>
+					</div>
+					<div class="loader">
+						<div class="circle"></div>
+						<div class="circle"></div>
+						<div class="circle"></div>
+					</div>   
 					 </section>
 					 <form class="chatin" onsubmit="return false;">
 						 <input type="text" placeholder="enter message.." class="message" data=${data.from}>
@@ -120,6 +143,7 @@ $(function () {
 				  </div>`)
 		}
 		$(`.message[data=${data.from}]`).on("keyup", function (e) {
+			Typing(data.from)
 			buttonState(this);
 		});
 
@@ -164,7 +188,11 @@ $(function () {
 						<button class="close">X</button>
 					</header>
 					<section class="chatwindow" data=${uid}>
-						   
+						<div class="loader">
+							<div class="circle"></div>
+							<div class="circle"></div>
+							<div class="circle"></div>
+						</div>   
 					</section>
 					<form class="chatin" onsubmit="return false;">
 						<input type="text" placeholder="enter message.." class="message" data=${uid}>
@@ -176,7 +204,9 @@ $(function () {
 			// adding chatbox animation
 			$(`.message[data=${uid}]`).on("keyup", function (e) {
 				// console.log("keyup",e.keyCode)
+				Typing(uid)
 				buttonState(this);
+				
 			});
 
 				UIrender(uid)
@@ -195,8 +225,8 @@ $(function () {
 				$(".container[data='" + data + "']").width("200px")
 				dflag = $(".container[data='" + data + "']").attr("data-flag", "true").attr("data-flag");
 			} else {
-				$(".container[data='" + data + "']").height("500px");
-				$(".container[data='" + data + "']").width("500px");
+				$(".container[data='" + data + "']").height("400px");
+				$(".container[data='" + data + "']").width("400px");
 				dflag = $(".container[data='" + data + "']").attr("data-flag", "false").attr("data-flag");
 			}
 		})
@@ -204,7 +234,12 @@ $(function () {
 			let closing = e.target.parentElement.getAttribute("data");
 			$(`.container[data=${closing}]`).remove();
 		})
+		//is user currently typing
+		$(`.message[data=${id}]`).keyup(function(){
+			//Typing()
+		})
 
+		// send message on click to the user
 		$(`.subx[data=${id}]`).click(function () {
 			console.log("sending to user", id)
 			let msg = $(`.message[data=${id}]`).val();
@@ -212,7 +247,6 @@ $(function () {
 			$(`.chatwindow[data=${id}]`).append(` <div class="box1">
 					<h1>${username}</h1>
 					<p>${msg}</p>
-					
 				  </div>`)
 				  $(`.message[data=${id}]`).val('')
 			 	buttonState(`.message[data=${id}]`)

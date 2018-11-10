@@ -140,61 +140,6 @@ margin-right: .5%;
 
 }
 
-.type {
-  bottom: 43px;
-  position: fixed;
-  margin-left: 50px;
-}
-
-.loader {
-  position: fixed;
-  width: 50px;
-  height: 15px;
-  text-align: center;
-  display: none;
-  bottom: 43px;
-}
-
-.circle {
-  height: 5px;
-  width: 10px;
-  background-color: #bbb;
-  border-radius: 50%;
-  display: inline-block;
-  position: relative;
-  animation: expand .99s ease-in-out infinite;
-  transform-origin: center center;
-}
-
-@keyframes expand {
-  0% {
-    transform: scale(1);
-  }
-
-  25% {
-    transform: scale(1.55);
-  }
-}
-
-.circle:nth-child(1) {
-  opacity: 0.3;
-  background: red;
-}
-
-.circle:nth-child(2) {
-  opacity: 0.3;
-  animation-delay: 280ms;
-  background: red;
-}
-
-.circle:nth-child(3) {
-  opacity: 0.3;
-  animation-delay: 560ms;
-  background: red;
-}
-
-
-
 .centered {
   width: 650px;
   height: 410px;
@@ -395,7 +340,7 @@ ul>li:hover {
   display: inline-flex;
   flex-direction: column;
   border: 1px solid #2f323b;
-  width: 500px;
+  width: 400px;
   overflow: hidden;
   height: 500px;
   background: #2f323b;
@@ -465,6 +410,7 @@ ul>li:hover {
   flex: auto;
   max-height: calc(100% - 50px);
   overflow: auto;
+  position:relative;
 }
 
 .chatin button {
@@ -542,4 +488,59 @@ ul>li:hover {
   font-size: 10pt;
   margin-bottom: 10px;
   font-weight: bold;
+}
+
+/* user typing notification */
+
+.loader {
+  border: none !important;
+  position: absolute;
+  display: none;
+  width: 57px;
+  height: 15px;
+  text-align: center;
+  justify-content: center;
+  align-items: center;
+  border-radius: 10px;
+  box-shadow: -1px 0px 5px 3px rgba(0, 0, 0, 0.75);
+  bottom: 0px;
+  margin-left: 5px;
+  padding: 0 !important;
+}
+
+.circle {
+  padding: 0 !important;
+  height: 7px;
+  width: 10px;
+  background-color: #2f323b !important;
+  border-radius: 50% !important;
+  display: inline-block;
+  border: none !important;
+  position: relative;
+  animation: expand .99s ease-in-out infinite;
+  transform-origin: center center;
+  margin:2px;
+}
+
+@keyframes expand {
+0% {
+  transform: scale(1);
+}
+25% {
+  transform: scale(1.25);
+}
+}
+
+.circle:nth-child(1) {
+opacity: 0.5;
+}
+
+.circle:nth-child(2) {
+opacity: 0.5;
+animation-delay: 280ms;
+}
+
+.circle:nth-child(3) {
+opacity: 0.5;
+animation-delay: 560ms;
 }

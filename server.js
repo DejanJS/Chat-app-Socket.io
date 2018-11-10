@@ -219,11 +219,14 @@ io.on('connection', function (socket) {
 		}
 
 	})
-	socket.on("typing", function (data) {
-		socket.broadcast.emit('typing', data)
+	// socket.on("typing", function (data) {
+	// 	socket.broadcast.emit('typing', data)
+	// })
+	socket.on("notyping", function (data) {
+		io.to(data.to + "").emit('notyping',{fromUser:data.from})
 	})
-	socket.on("notyping", function (empty) {
-		socket.broadcast.emit("notyping", empty)
+	socket.on('isTyping',function(data){
+		io.to(data.to + "").emit('isTyping',{fromUser:data.from})
 	})
 	socket.on("toUser",data =>{
 		console.log("we got a message",data)

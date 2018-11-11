@@ -45,21 +45,11 @@ $(function () {
 		}
 	})
 	socket.on("chat message", function (msg) {
-		// $('.loader').css("display", "none");
-		// $('.type').text('');
-		// $('#messages').append($('<li>').text(msg.user + " : " + msg.msg));
 		writeMessage(msg.user, msg.msg);
 	})
 
-	// $("#m").on("input", function () {
-	// 	socket.emit("typing", username);
-	// 	if (true) { // small typing hack
-	// 		setTimeout(function () {
-	// 			socket.emit("notyping", '')
-	// 		}, 2000)
-	// 	}
-	// })
 
+	//user is typing...
 	function Typing(id){
 		socket.emit('isTyping',{
 			from:currSocket,
@@ -86,12 +76,13 @@ $(function () {
 	socket.on("isTyping", function (data) {
 		$('.loader').css("display", "flex");
 		console.log("is typing : ",data)
-		// $('.type').html("<em>" + data + " is typing..." + "</em>")
 	})
 	socket.on("notyping", function (data) {
 		$('.loader').css("display", "none");
 		console.log("not typing : ",data)
 	})
+
+	//render list on connection
 	socket.on("User connected", function (data) {
 		$('.ulist').html('');
 		data.users.map((user) => {
@@ -100,6 +91,8 @@ $(function () {
 		openChat()
 		console.log("user list array : ", data);
 	})
+
+	//render list on disconnection
 	socket.on("user disconnected", function (data) {
 		$('.ulist').html('');
 		data.users.map((user) => {
@@ -107,9 +100,10 @@ $(function () {
 		})
 		openChat()
 	})
-	//reciever
+	//receiver
 	socket.on("toUser", data => {
 		console.log("received data from user", data);
+		//check if there is already opened chat ,if not pop it up to the user with the message;
 		if ($(`.container[data=${data.from}]`).length === 0) {
 			$('.fixedcont').append(`<div class="container" data=${data.from} >
 					 <header class="header" data=${data.from}>
@@ -134,8 +128,11 @@ $(function () {
 						 </button>
 					 </form>
 					 </div>`)
+					 
 
 		} else {
+			console.log("this is else statement, i am firing? ",data.message , "ako je veci od 0 ima boxa ",$(`.container[data=${data.from}]`).length)
+			//if there is already opened chat window just add the message to the chat window
 			$(`.chatwindow[data=${data.from}]`).append(` <div class="box2">
 					<h1>${data.username}</h1>
 					<p>${data.message}</p>
@@ -146,11 +143,10 @@ $(function () {
 			Typing(data.from)
 			buttonState(this);
 		});
-
-			UIrender(data.from);
+			 UIrender(data.from);
 	})
 
-
+//button enable/disable
 	function buttonState(button) {
 		if ($(button).val() == '') {
 			console.log("button off")
@@ -163,11 +159,11 @@ $(function () {
 	}
 
 	function openChat() { // test = socketid / currsocket
-		$('.ulist > li').click(function (e) {
+		$('.ulist > li').click(function (e) { //clicking on list of users
 			var toWho = $(this).text();
-			uid = e.target.getAttribute('data');
+			uid = e.target.getAttribute('data'); //target socket id of the user that we want to send the message
 			console.log("hmm?", currSocket)
-			if (uid === currSocket) {
+			if (uid === currSocket) { //prevent from clicking on yourself
 				return false;
 			}
 			console.log("sending to ", uid)
@@ -208,13 +204,13 @@ $(function () {
 				buttonState(this);
 				
 			});
-
 				UIrender(uid)
 		})
 	}
 
 
 	function UIrender(id){
+		// _minimize the chatbox animation
 		$(`.header[data=${id}], .usernamex[data=${id}]`).click(function (e) {
 			e.stopPropagation();
 			let data = e.target.parentElement.getAttribute('data');
@@ -230,19 +226,18 @@ $(function () {
 				dflag = $(".container[data='" + data + "']").attr("data-flag", "false").attr("data-flag");
 			}
 		})
+		// close the chatbox
 		$(`.close`).click(function (e) {
 			let closing = e.target.parentElement.getAttribute("data");
 			$(`.container[data=${closing}]`).remove();
 		})
-		//is user currently typing
-		$(`.message[data=${id}]`).keyup(function(){
-			//Typing()
-		})
 
 		// send message on click to the user
-		$(`.subx[data=${id}]`).click(function () {
+		$(`.subx[data=${id}]`).unbind('click').click(function (e) { 
+			e.stopPropagation();
 			console.log("sending to user", id)
 			let msg = $(`.message[data=${id}]`).val();
+			console.log("this is message that is being sent ",msg);
 			Whisper(id, msg);
 			$(`.chatwindow[data=${id}]`).append(` <div class="box1">
 					<h1>${username}</h1>

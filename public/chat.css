@@ -466,7 +466,7 @@ ul>li:hover {
 .fixedcont {
   display: flex;
   position: fixed;
-  bottom: 38px;
+  bottom: 34px;
 }
 
 .fixedcont>* {

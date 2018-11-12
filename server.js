@@ -86,9 +86,6 @@ app.get("/svc/messages", async function (req, res) {
 	}
 })
 
-// function crypting(pass,alg="sha256",secret ="this is my secret",salt = "asjdkluhjsio8djkasn"){
-// 	return crypto.createHmac(alg,secret).update(`${salt}-${pass}`).digest("hex");
-// }
 function crypt(pass,salt,iteration = 100000,keylen = 64,alg="sha256"){
 	return crypto.pbkdf2Sync(pass,Buffer.from(salt),iteration,keylen,alg).toString('hex');
 }
@@ -176,8 +173,6 @@ async function GetMsg() {
 	`)
 }
 
-// io.to('games').on("connection",function(socket){
-// 	socket.on("joininggame",()=>{
 var userSocket = [];
 var currUser;
 //specific responder for userlogin event
@@ -199,8 +194,6 @@ function objResponse(statuscode,obj,res){
 io.on('connection', function (socket) {
 	users++;
 	currUser = socket.id;
-	// userSocket.push(socket.id);
-	// socket.join("default room",)
 	console.log(`a user connected\nnumber of users : ${users}`);
 	console.log("Loopback : ", socket.handshake.address)
 	socket.on('disconnect', () => {
@@ -219,9 +212,7 @@ io.on('connection', function (socket) {
 		}
 
 	})
-	// socket.on("typing", function (data) {
-	// 	socket.broadcast.emit('typing', data)
-	// })
+
 	socket.on("notyping", function (data) {
 		io.to(data.to + "").emit('notyping',{fromUser:data.from})
 	})
@@ -234,10 +225,3 @@ io.on('connection', function (socket) {
 	})
 });
 
-// function createRoom(name){
-// 	io.on("connection",function(socket){
-// 		socket.join(name);
-// 		socket.to(name).emit("")
-// 	})
-	
-// }

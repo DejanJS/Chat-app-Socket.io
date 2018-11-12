@@ -1,6 +1,3 @@
-function writeMessage(user, msg) {
-	$('#messages').append($('<li>').text(user + " : " + msg));
-}
 $(function () {
 	var socket = io();
 	var username;
@@ -249,3 +246,6 @@ $(function () {
 }
 
 })
+function writeMessage(user, msg) {
+	$('#messages').append($('<li>').text(user + " : " + msg));
+}

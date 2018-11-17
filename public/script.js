@@ -128,7 +128,6 @@ $(function () {
 					 
 
 		} else {
-			console.log("this is else statement, i am firing? ",data.message , "ako je veci od 0 ima boxa ",$(`.container[data=${data.from}]`).length)
 			//if there is already opened chat window just add the message to the chat window
 			$(`.chatwindow[data=${data.from}]`).append(` <div class="box2">
 					<h1>${data.username}</h1>

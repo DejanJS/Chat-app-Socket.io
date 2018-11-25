@@ -1,7 +1,8 @@
 const db = require('./db.js').db;
+const User = require('./user.js');
 module.exports = class Message{
     static async insert(user, msg) {
-        var id = await GetId(user);
+        var id = await User.getId(user);
         await db.none('INSERT INTO Messages(UserId,text,timestamp) VALUES($1,$2,current_timestamp)', [id, msg])
     }
     static async get() {

@@ -17,7 +17,11 @@ $(function () {
 	$('.sub').click(function () {
 		username = $('#name').val();
 		password = $('#password').val();
-		$.post('http://localhost:3000/user/entry', { name: username, pass: password, id: currSocket }, function (data) {
+		$.post('http://localhost:3000/user/entry', {
+			name: username,
+			pass: password,
+			id: currSocket
+		}, function (data) {
 			console.log("this is msg : ", data.message);
 		});
 		console.log("this is user ", $('#name').val());
@@ -29,7 +33,10 @@ $(function () {
 
 	$('.send').click(function () {
 		if ($('.centered').length <= 0) {
-			socket.emit('chat message', { msg: $('#m').val(), user: username });
+			socket.emit('chat message', {
+				msg: $('#m').val(),
+				user: username
+			});
 			$('#m').val('');
 		}
 		return false;
@@ -37,7 +44,10 @@ $(function () {
 	})
 	$('#m').keyup(function (e) {
 		if (e.which === 13) {
-			socket.emit("chat message", { msg: $(this).val(), user: username });
+			socket.emit("chat message", {
+				msg: $(this).val(),
+				user: username
+			});
 			$(this).val('')
 		}
 	})
@@ -47,15 +57,15 @@ $(function () {
 
 
 	//user is typing...
-	function Typing(id){
-		socket.emit('isTyping',{
-			from:currSocket,
+	function Typing(id) {
+		socket.emit('isTyping', {
+			from: currSocket,
 			to: id
 		});
 		if (true) { // small typing hack
 			setTimeout(function () {
 				socket.emit("notyping", {
-					from:currSocket,
+					from: currSocket,
 					to: id
 				})
 			}, 2000)
@@ -72,11 +82,11 @@ $(function () {
 	}
 	socket.on("isTyping", function (data) {
 		$('.loader').css("display", "flex");
-		console.log("is typing : ",data)
+		console.log("is typing : ", data)
 	})
 	socket.on("notyping", function (data) {
 		$('.loader').css("display", "none");
-		console.log("not typing : ",data)
+		console.log("not typing : ", data)
 	})
 
 	//render list on connection
@@ -125,7 +135,7 @@ $(function () {
 						 </button>
 					 </form>
 					 </div>`)
-					 
+
 
 		} else {
 			//if there is already opened chat window just add the message to the chat window
@@ -139,16 +149,15 @@ $(function () {
 			Typing(data.from)
 			buttonState(this);
 		});
-			 UIrender(data.from);
+		UIrender(data.from);
 	})
 
-//button enable/disable
+	//button enable/disable
 	function buttonState(button) {
 		if ($(button).val() == '') {
 			console.log("button off")
 			$(button).removeAttr('good');
-		}
-		else {
+		} else {
 			console.log("button on")
 			$(button).attr('good', '');
 		}
@@ -198,14 +207,14 @@ $(function () {
 				// console.log("keyup",e.keyCode)
 				Typing(uid)
 				buttonState(this);
-				
+
 			});
-				UIrender(uid)
+			UIrender(uid)
 		})
 	}
 
 
-	function UIrender(id){
+	function UIrender(id) {
 		// _minimize the chatbox animation
 		$(`.header[data=${id}], .usernamex[data=${id}]`).click(function (e) {
 			e.stopPropagation();
@@ -229,22 +238,23 @@ $(function () {
 		})
 
 		// send message on click to the user
-		$(`.subx[data=${id}]`).unbind('click').click(function (e) { 
+		$(`.subx[data=${id}]`).unbind('click').click(function (e) {
 			e.stopPropagation();
 			console.log("sending to user", id)
 			let msg = $(`.message[data=${id}]`).val();
-			console.log("this is message that is being sent ",msg);
+			console.log("this is message that is being sent ", msg);
 			Whisper(id, msg);
 			$(`.chatwindow[data=${id}]`).append(` <div class="box1">
 					<h1>${username}</h1>
 					<p>${msg}</p>
 				  </div>`)
-				  $(`.message[data=${id}]`).val('')
-			 	buttonState(`.message[data=${id}]`)
-	})
-}
+			$(`.message[data=${id}]`).val('')
+			buttonState(`.message[data=${id}]`)
+		})
+	}
 
 })
+
 function writeMessage(user, msg) {
 	$('#messages').append($('<li>').text(user + " : " + msg));
 }
